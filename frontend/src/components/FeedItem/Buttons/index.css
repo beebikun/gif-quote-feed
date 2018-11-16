@@ -1,0 +1,41 @@
+.Button {
+    width: 50px;
+    height: 50px;
+    /*background-image: linear-gradient(#efefef , #bcbcbc);*/
+    background-color: #efefef;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.Button:hover {
+	background-image: linear-gradient(#ddd , #bbb);
+}
+
+.Button :after {
+	/*position: absolute;*/
+}
+
+.Button--refresh:after {
+	content: "🤷‍♂️";
+	margin-top: -2px;
+}
+.Button--edit:after {
+	content: "👨‍🔧";
+}
+.Button--decline:after {
+	content: "🙅‍♂️";
+}
+.Button--accept:after {
+	content: "🙆‍♂️";
+}
+.Button--star:after {
+	content: "🖤";
+}
+.Button--star-filled:after {
+	content: "💛";
+}

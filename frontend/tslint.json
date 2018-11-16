@@ -1,0 +1,103 @@
+{
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js"
+    ]
+  },
+  "rules": {
+        "class-name": true,
+        "comment-format": [
+            true,
+            "check-space"
+        ],
+        "indent": [
+            true,
+            "spaces",
+            2
+        ],
+        "one-line": [
+            true,
+            "check-open-brace",
+            "check-whitespace"
+        ],
+        "no-any": true,
+        "no-var-keyword": true,
+        "quotemark": [
+            true,
+            "single",
+            "avoid-escape"
+        ],
+        "semicolon": [
+            true,
+            "always",
+            "ignore-bound-class-methods"
+        ],
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-module",
+            "check-separator",
+            "check-type"
+        ],
+        "typedef-whitespace": [
+            true,
+            {
+                "call-signature": "nospace",
+                "index-signature": "nospace",
+                "parameter": "nospace",
+                "property-declaration": "nospace",
+                "variable-declaration": "nospace"
+            },
+            {
+                "call-signature": "onespace",
+                "index-signature": "onespace",
+                "parameter": "onespace",
+                "property-declaration": "onespace",
+                "variable-declaration": "onespace"
+            }
+        ],
+        "no-internal-module": true,
+        "no-trailing-whitespace": true,
+        "no-null-keyword": false,
+        "no-construct": true,
+        "prefer-const": true,
+        "jsdoc-format": true,
+        "no-duplicate-variable": true,
+        "no-invalid-template-strings": true,
+        "no-sparse-arrays": true,
+        "triple-equals": [true, "allow-undefined-check"],
+        "linebreak-style": [true, "LF"],
+        "arrow-return-shorthand": true,
+        "max-line-length": [true, {"limit": 120, "ignore-pattern": "^import |^export {(.*?)}"}],
+        "no-this-assignment": true,
+        "ban-types": {
+            "options": [
+                ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+                ["Function", "Avoid using the `Function` type. Prefer a specific function type, like `() => void`, or use `ts.AnyFunction`."],
+                ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+                ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+                ["String", "Avoid using the `String` type. Did you mean `string`?"]
+            ]
+        },
+        "array-type": [true, "array"],
+        "binary-expression-operand-order": true,
+        "import-spacing": true,
+        "newline-before-return": true,
+        "new-parens": true,
+        "no-consecutive-blank-lines": [true, 2],
+        "no-unnecessary-callback-wrapper": true,
+        "no-unnecessary-initializer": true,
+        "number-literal-format": true,
+        "space-before-function-paren": [true, {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
+        "space-within-parens": false,
+        "no-console": false,
+        "no-unused-variable": false,
+        "ordered-imports": false,
+        "no-var-requires": false
+    }
+}

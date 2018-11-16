@@ -1,0 +1,15 @@
+
+@import url('https://fonts.googleapis.com/css?family=Cormorant+Garamond');
+
+.Item__text {
+	font-size: 40px;
+	font-family: 'Cormorant Garamond', serif;
+}
+
+.Item__text--fz-sm {
+	font-size: 25px;
+}
+
+.Item__text--fz-lg {
+	font-size: 60px;
+}

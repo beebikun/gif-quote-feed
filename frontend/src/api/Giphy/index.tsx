@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 import Gif from 'api/records/Gif';
-export { default as Gif } from 'api/records/Gif';
 
 const API_KEY = 'OvUTl0xhE2Gd9tiEcCZadiokCumhviZG';
 export const BASE_URL = 'http://api.giphy.com/v1/gifs/';
 
-const SIZE_FIELD = 'original';
+export const SIZE_FIELD = 'original';
 
 export interface IGifRaw {
   readonly id: string;
@@ -28,7 +27,7 @@ export interface IResponse {
 }
 
 class API {
-  public translate (s: string): Promise<IGif> {
+  public translate (s: string): Promise<Gif> {
     const weirdness = 10;
     const url = `${ getUrl('translate') }&s=${ s }&weirdness=${ weirdness }`;
 
@@ -46,7 +45,7 @@ class API {
 }
 
 
-function row2gif({ id, images }: IGifRaw): Gif {
+export function row2gif({ id, images }: IGifRaw): Gif {
   const data = images[SIZE_FIELD];
 
   return new Gif({
@@ -61,18 +60,3 @@ function getUrl(name: string) {
 }
 
 export default new API();
-
-
-export const _TEST_GIF_RAW: IGifRaw = {
-  id: 'id',
-  images: {
-    [ SIZE_FIELD ]: {
-      height: 200,
-      url: 'src',
-      width: 200,
-    },
-  },
-  title: 'title',
-};
-export const _TEST_GIF: Gif = row2gif(_TEST_GIF_RAW);
-export const _TEST_GIF_RESPONSE = { data: { data: _TEST_GIF_RAW } };

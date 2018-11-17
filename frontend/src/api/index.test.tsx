@@ -1,15 +1,19 @@
-import backedApi, { _TEST_BACKEND_ITEM, IItemRaw } from './Backend';
+import backedApi, { IItemRaw } from './Backend';
 import quotesApi, { COUNT } from './Andruxnet';
-import giphyApi, { Gif, _TEST_GIF } from './Giphy';
+import giphyApi from './Giphy';
+import Gif from 'api/records/Gif';
+import Item from 'api/records/Item';
 
-import api, { Item } from './index';
+import api from './index';
 
 import FakeID from 'utils/FakeID';
 import generateArray from 'utils/generateArray';
-import { IMockedMethod } from '__mocks__/axios-utils';
+
+import { _ITEM as _BACKEND_ITEM } from 'utils/testUtils/data/backend';
+import { _ITEM as _GIF_ITEM } from 'utils/testUtils/data/gif';
 
 
-function expectItemsList(data, size) {
+function expectItemsList(data: Item[], size: number) {
   expect(data).toMatchObject(expect.any(Array));
   expect(data).toHaveLength(size);
 
@@ -20,7 +24,7 @@ function expectItemsList(data, size) {
 
 describe('Random', () => {
   const mockedGif = jest.spyOn(giphyApi, 'random');
-  mockedGif.mockReturnValue(Promise.resolve(_TEST_GIF));
+  mockedGif.mockReturnValue(Promise.resolve(_GIF_ITEM));
 
   const mockedQuotes = jest.spyOn(quotesApi, 'get');
   mockedQuotes.mockReturnValueOnce(Promise.resolve(generateArray(COUNT, () => 'text')));
@@ -62,14 +66,14 @@ describe('Random', () => {
 
 describe('Saved', () => {
   it('create', () => {
-    const item = new Item({ ..._TEST_BACKEND_ITEM, id: FakeID.next() });
+    const item = new Item({ ..._BACKEND_ITEM, id: FakeID.next() });
     const newId = 'newId';
-    const mocked = getMock('create', { ..._TEST_BACKEND_ITEM, id: newId });
+    const mocked = getMock('create', { ..._BACKEND_ITEM, id: newId });
 
     return api.saveItem(item)
       .then((data: Item) => {
         expect(mocked).toHaveBeenCalledTimes(1);
-        const { id, ...callData } = item.toObject();
+        const { id, ...callData } = item.toObject() as IItemRaw;
         expect(mocked).toHaveBeenCalledWith(callData);
 
         testItem(data, newId);
@@ -77,48 +81,55 @@ describe('Saved', () => {
   });
 
   it('edit', () => {
-    const item = new Item(_TEST_BACKEND_ITEM);
-    const mocked = getMock('edit');
+    const item = new Item(_BACKEND_ITEM);
+    const mocked = getMock('edit', _BACKEND_ITEM);
 
     return api.saveItem(item)
       .then((data: Item) => {
         expect(mocked).toHaveBeenCalledTimes(1);
-        const { id, ...callData } = item.toObject();
-        expect(mocked).toHaveBeenCalledWith(id, callData);
+        expect(mocked).toHaveBeenCalledWith(item.id, item);
 
-        testItem(data, _TEST_BACKEND_ITEM.id);
+        testItem(data, _BACKEND_ITEM.id);
       });
   });
 
   it('delete', () => {
-    const item = new Item(_TEST_BACKEND_ITEM);
-    const mocked = getMock('delete');
+    const item = new Item(_BACKEND_ITEM);
+    const mocked = getMock('delete', undefined);
 
     return api.deleteItem(item)
-      .then(() => {
+      .then((data: Item) => {
         expect(mocked).toHaveBeenCalledTimes(1);
-        expect(mocked).toHaveBeenCalledWith(_TEST_BACKEND_ITEM.id);
+        expect(mocked).toHaveBeenCalledWith(_BACKEND_ITEM.id);
+
+        testItem(data);
       });
   });
 
   it('delete not existed', () => {
-    const item = new Item({ ..._TEST_BACKEND_ITEM, id: FakeID.next() });
-    const mocked = getMock('delete');
+    const item = new Item({ ..._BACKEND_ITEM, id: FakeID.next() });
+    const mocked = getMock('delete', undefined);
 
-    const promise = api.deleteItem(item);
-    expect(promise).toBeUndefined();
-    expect(mocked).toHaveBeenCalledTimes(0);
+    return api.deleteItem(item)
+      .then((data: Item) => {
+        expect(mocked).toHaveBeenCalledTimes(0);
+
+        testItem(data);
+        expect(data.id)
+          .toBe(item.id);
+      });
   });
 
   it('list', () => {
-    const items = [ _TEST_BACKEND_ITEM ];
+    const items = [ _BACKEND_ITEM ];
     const mocked = getMock('list', items);
+
     return api.savedItemsList()
       .then((data: Item[]) => {
         expect(mocked).toHaveBeenCalledTimes(1);
 
         expectItemsList(data, items.length);
-  
+
         const ids: string[] = data.map(({ id }) => id);
         const fakeIds = ids.filter((id) => FakeID.isFake(id));
         expect(ids)
@@ -128,9 +139,12 @@ describe('Saved', () => {
       });
   });
 
-  function getMock(method: string, resolve?: IItemRaw | IItemRaw[]): void {
+  type BackendMethods = keyof typeof backedApi;
+  /* tslint:disable:no-any */
+  function getMock(method: BackendMethods, resolve: any) {
     const mocked = jest.spyOn(backedApi, method);
-    mocked.mockReturnValueOnce(Promise.resolve(resolve));
+    /* tslint:disable:no-any */
+    mocked.mockImplementationOnce((): Promise<any> => Promise.resolve(resolve));
     mocked.mockClear();
 
     return mocked;
@@ -141,7 +155,7 @@ describe('Saved', () => {
     const expected = expect.any(Item);
     expect(result).toMatchObject(expected);
 
-    const id = result.get('id');
+    const id: string = result.id;
     const isFakeId = FakeID.isFake(id);
     expect(isFakeId)
       .toBe(oldId === undefined);

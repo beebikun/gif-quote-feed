@@ -1,41 +1,49 @@
 import axios from 'axios';
 
-import backendApi, { IItemRaw } from './Backend';
+import backendApi, { IItemRaw, IUnsavedItem } from './Backend';
 import quoteApi, { COUNT } from './Andruxnet';
-import giphyApi, { Gif } from './Giphy';
+import giphyApi from './Giphy';
 
 import Item from 'api/records/Item';
-export { default as Item} from 'api/records/Item';
+import Gif from 'api/records/Gif';
 
 import generateArray from 'utils/generateArray';
-import FakeID from 'utils/FakeID';
+
 
 class Api {
   public randomItemsList(): Promise<Item[]> {
-    const quotePromise: Promise<string[]>  = quoteApi.get();
-    const gifPromises: Promise<Gif>[] = generateArray(COUNT, () => this.randomGif());
+    type IPromiseQuote = Promise<string[]>;
+    type IPromiseGif = Promise<Gif>;
+    type IPromise = IPromiseQuote | IPromiseGif;
 
-    return axios.all([quotePromise, ...gifPromises])
-      .then(axios.spread((quotes: string[], ...gifs: Gif[]) => {
-        const size: number = Math.min(quotes.length, gifs.length);
-    
-        return generateArray(size, createItem);
+    const gifPromises: IPromiseGif[] = generateArray<Promise<Gif>>(COUNT, () => this.randomGif());
+    const promises: IPromise[] = [ quoteApi.get(), ...gifPromises ];
 
-        function createItem(_: undefined, i: number): Item {
-          return new Item({
-            id: FakeID.next(),
-            gif: gifs[i],
-            text: quotes[i],
-          });
-        }
-      }));
+    return axios.all<IPromise>(promises)
+      .then(spreadResult);
+
+    /* tslint:disable:no-any */
+    function spreadResult(results: any[]): Item[] {
+      const quotes = results[0] as string[];
+      const gifs = results.slice(1) as Gif[];
+      const size: number = Math.min(quotes.length, gifs.length);
+
+      return generateArray<Item>(size, createItem);
+
+      function createItem(_: undefined, i: number): Item {
+        return new Item({
+          gif: gifs[i],
+          text: quotes[i],
+        });
+      }
+    }
   }
 
   public randomGif(): Promise<Gif> {
     return giphyApi.random();
   }
 
-  /* ------------------------------------------- */ 
+  /* ------------------------------------------- */
 
   public savedItemsList(): Promise<Item[]> {
     return backendApi.list()
@@ -44,43 +52,34 @@ class Api {
       });
   }
 
-  /* ------------------------------------------- */ 
+  /* ------------------------------------------- */
 
   public saveItem(item: Item): Promise<Item> {
-    const { id, ...data }: IItemRaw = item2raw(item);
+    const id = item.getId();
+
     if (id === undefined) {
-      return backendApi.create(data)
-        .then(({ id }: IItemRaw) => {
-          return item.set('id', id);
+      return backendApi.create(item.data() as IUnsavedItem)
+        .then((rawItem: IItemRaw) => {
+          return item.set('id', rawItem.id);
         });
     }
     else {
-      return backendApi.edit(id, data)
-        .then(() => {
-          return item;
-        });
+      return backendApi.edit(id, item)
+        .then(() => item);
     }
   }
 
-  public deleteItem(item: Item): Promise<Item> | void {
-    const { id }: IItemRaw = item2raw(item);
+  public deleteItem(item: Item): Promise<Item> {
+    const id = item.getId();
     if (id === undefined) {
-      return;
+      return Promise.resolve(item);
     }
 
     return backendApi.delete(id)
       .then(() => {
-        return item.set('id', FakeID.next())
+        return item.resetId();
       });
   }
-}
-
-function item2raw(item: Item): IItemRaw {
-  const data: IItemRaw = { ...item.toObject() };
-  if (FakeID.isFake(data.id)) {
-    data.id = undefined;
-  }
-  return data;
 }
 
 

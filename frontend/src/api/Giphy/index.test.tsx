@@ -1,10 +1,10 @@
-import api, { Gif } from './index';
-
+import api from './index';
+import Gif from 'api/records/Gif';
 import { expectCall, clearMethod } from '__mocks__/axios-utils';
 
 
 function expectData(data: Gif) {
-  const expected = expect.any(Gif)
+  const expected = expect.any(Gif);
   expect(data)
     .toMatchObject(expected);
 }

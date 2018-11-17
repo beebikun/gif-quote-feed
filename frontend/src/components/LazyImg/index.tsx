@@ -2,9 +2,9 @@ import * as React from 'react';
 import './index.css';
 
 export interface IProps {
-  src?: string;
-  width?: number;
-  height?: number;
+  src: string;
+  width: number;
+  height: number;
 }
 
 // interface State {
@@ -18,7 +18,7 @@ export default class LazyImg extends React.Component<IProps, {}> {
 
   public render() {
     return (
-      <img src={ this.props.src ? this.props.src : '' } className='LazyImg' />
+      <img src={ this.props.src } className='LazyImg' />
     );
   }
 }

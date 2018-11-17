@@ -28,7 +28,6 @@
 
 
 .Item:nth-child(odd) .Item__content {
-	/*background-color: green;*/
 	flex-direction: row-reverse;
 }
 
@@ -40,7 +39,6 @@
 
 .Item__img img {
 	max-height: 400px;
-	/*border-radius: 3px;*/
 	max-width: 100%;
 }
 

@@ -1,36 +1,60 @@
 import axios from 'axios';
-import { _TEST_QUOTE_RESPONSE, BASE_URL as QUOTE_URL } from 'api/Andruxnet';
-import { _TEST_GIF_RESPONSE, BASE_URL as GIF_URL } from 'api/Giphy';
-import { _TEST_BACKEND_RESPONSE, _TEST_BACKEND_LIST_RESPONSE, BASE_URL as BACKEND_URL } from 'api/Backend';
+
+import { BASE_URL as BACKEND_URL } from 'api/Backend';
+import {
+  getResponse as getBackendResponse,
+  getListReponse as getBackendListResponse
+} from 'utils/testUtils/data/backend';
+
+import { BASE_URL as QUOTE_URL } from 'api/Andruxnet';
+import {
+  getResponse as getQuotesResponse,
+} from 'utils/testUtils/data/quotes';
+
+import { BASE_URL as GIF_URL } from 'api/Giphy';
+import {
+  getResponse as getGifResponse,
+} from 'utils/testUtils/data/gif';
+
+
+function responseFactory(url: string) {
+  if (url.startsWith(QUOTE_URL)) {
+    return getQuotesResponse();
+  }
+  if (url.startsWith(GIF_URL)) {
+    return getGifResponse();
+  }
+  if (url.startsWith(BACKEND_URL)) {
+    return getBackendListResponse();
+  }
+
+  return;
+}
 
 
 const mockedGet = jest.fn((url: string) => {
-  const response = url.startsWith(QUOTE_URL)   ? _TEST_QUOTE_RESPONSE        :
-                   url.startsWith(GIF_URL)     ? _TEST_GIF_RESPONSE          :
-                   url.startsWith(BACKEND_URL) ? _TEST_BACKEND_LIST_RESPONSE :
-                   undefined;
+  const response = responseFactory(url);
 
   return Promise.resolve(response);
 });
 
 const mockedPost = jest.fn((url: string) => {
-  return Promise.resolve(_TEST_BACKEND_RESPONSE);
+  return Promise.resolve(getBackendResponse());
 });
 
 const mockedPut = jest.fn((url: string) => {
-  return Promise.resolve(_TEST_BACKEND_RESPONSE);
+  return Promise.resolve(getBackendResponse());
 });
 
 const mockedDelete = jest.fn(() => {
-  return Promise.resolve(_TEST_BACKEND_RESPONSE);
+  return Promise.resolve(getBackendResponse());
 });
 
 export default {
+  all: axios.all,
+  delete: mockedDelete,
   get: mockedGet,
   post: mockedPost,
   put: mockedPut,
-  delete: mockedDelete,
-
   spread: axios.spread,
-  all: axios.all,
 };

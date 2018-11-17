@@ -6,7 +6,7 @@ export const BASE_URL = 'https://andruxnet-random-famous-quotes.p.mashape.com/';
 const URL = `${ BASE_URL }?cat=${ CAT }&count=${ COUNT }`;
 const API_KEY = 'onAjInPSKymshNzgMRBkYmyEamZep11hZqhjsnRVS8YhEfXaX7';
 
-export type IQuote {
+export interface IQuote {
   readonly author: string;
   readonly quote: string;
   // category: string;
@@ -28,11 +28,8 @@ class API {
   }
 }
 
-function raw2string(data): string[] {
+function raw2string(data: IQuote[]): string[] {
   return data.map(({ quote }: IQuote) => quote);
 }
 
 export default new API();
-
-export const _TEST_QUOTE: IQuote = { quote: 'quote', author: 'author' };
-export const _TEST_QUOTE_RESPONSE: IResponse = { data: new Array(COUNT).fill(_TEST_QUOTE) };

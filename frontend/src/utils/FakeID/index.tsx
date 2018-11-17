@@ -1,15 +1,17 @@
 class FakeID {
+  private PREFIX: string;
+  private count = 0;
+
   constructor() {
     const RANDOM_INT = Math.round(Math.random() * 10000);
     this.PREFIX = `FAKE_${ RANDOM_INT }_`;
-    this.count = 0;
   }
 
-  next(): string {
+  public next(): string {
     return this.PREFIX + (++this.count);
   }
 
-  isFake(id: string): boolean {
+  public isFake(id: string): boolean {
     return id.startsWith(this.PREFIX);
   }
 }

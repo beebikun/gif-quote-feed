@@ -5,7 +5,7 @@ import Background from './index';
 
 
 it('render without crashing', () => {
-  const wrapper = shallow(<Background > <div id="inner" /> </Background>);
+  const wrapper = shallow(<Background > <div id='inner' /> </Background>);
   expect(wrapper.find('#inner')).toHaveLength(1);
 
   const bg = wrapper.get(0).props.style.backgroundColor;

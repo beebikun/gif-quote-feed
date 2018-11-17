@@ -5,6 +5,6 @@ import Buttons from './index';
 
 
 it('render without crashing', () => {
-  shallow(<Buttons />);
+  shallow(<Buttons itemId={ '1' } />);
 });
 

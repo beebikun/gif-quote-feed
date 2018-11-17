@@ -1,6 +1,5 @@
 import api, { COUNT } from './index';
 
-import { IMockedMethod } from '__mocks__/axios-utils';
 import { expectCall, clearMethod } from '__mocks__/axios-utils';
 
 

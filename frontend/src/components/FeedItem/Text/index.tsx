@@ -7,7 +7,7 @@ export interface IProps {
 }
 
 
-export default function Text ({ text }: IProps) {
+export default function Text({ text }: IProps) {
   const textL = text.length;
   const textCls = textL > 150 ? 'Item__text--fz-sm' :
                   textL < 30  ? 'Item__text--fz-lg' : '';

@@ -1,11 +1,13 @@
-import api, { IItemRaw, _TEST_BACKEND_ITEM } from './index';
-import { Gif } from 'api/Giphy';
-import { expectCall, clearMethod } from '__mocks__/axios-utils';
+import api, { IItemRaw } from './index';
+import Gif from 'api/records/Gif';
+import Item from 'api/records/Item';
 
+import { expectCall, clearMethod } from '__mocks__/axios-utils';
+import { _ITEM } from 'utils/testUtils/data/backend';
 
 const expectedItem = expect.objectContaining({
-  id: expect.any(String),
   gif: expect.any(Gif),
+  id: expect.any(String),
   text: expect.any(String),
 });
 
@@ -24,9 +26,9 @@ it('list', () => {
 it('create', () => {
   clearMethod('post');
 
-  return api.create(_TEST_BACKEND_ITEM)
+  return api.create(_ITEM)
     .then((data: IItemRaw) => {
-      expectCall<IItemRaw>('post', [_TEST_BACKEND_ITEM]);
+      expectCall<IItemRaw>('post', [_ITEM]);
       expect(data).toMatchObject(expectedItem);
     });
 });
@@ -35,9 +37,9 @@ it('create', () => {
 it('edit', () => {
   clearMethod('put');
 
-  return api.edit(_TEST_BACKEND_ITEM.id, _TEST_BACKEND_ITEM)
+  return api.edit(_ITEM.id, new Item(_ITEM))
     .then((data: IItemRaw) => {
-      expectCall<IItemRaw>('put', [_TEST_BACKEND_ITEM]);
+      expectCall<IItemRaw>('put', [new Item(_ITEM]);
       expect(data).toMatchObject(expectedItem);
     });
 });
@@ -46,9 +48,9 @@ it('edit', () => {
 it('delete', () => {
   clearMethod('delete');
 
-  return api.delete(_TEST_BACKEND_ITEM.id)
+  return api.delete(_ITEM.id)
     .then(() => {
       expectCall<IItemRaw>('delete', []);
     });
-})
+});
 

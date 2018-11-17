@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import Text from './index';
 
-const text = "text"
+const text = 'text';
 
 it('render without crashing', () => {
   const wrapper = shallow(<Text text={ text } />);

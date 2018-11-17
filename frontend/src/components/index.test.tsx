@@ -6,6 +6,7 @@ import Item from 'api/records/Item';
 import App, { IState } from './index';
 
 import { generateTestItems } from 'utils/testUtils/data/item';
+import { getExpected } from 'utils/testUtils';
 
 it('render without crashing', () => {
   shallow(<App />);
@@ -28,7 +29,7 @@ it('fetch data', () => {
 
   expect(render).toHaveBeenCalledTimes(1);  // initial render
   expect(fetch).toHaveBeenCalledTimes(0);
-  expectItems([]);
+  expectStorage([]);
 
   (wrapper.instance() as App).componentDidMount();
 
@@ -38,11 +39,11 @@ it('fetch data', () => {
 
   return Promise.resolve(wrapper)
     .then(() => {
-      expectItems(responseItems);
-
-      expect(render).toHaveBeenCalledTimes(2); // render after setState
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(setState).toHaveBeenCalledTimes(1);
+      expect(render).toHaveBeenCalledTimes(2); // render after setState
+
+      expectStorage(responseItems);
 
       expect(mocked).toHaveBeenCalledTimes(1);
 
@@ -53,9 +54,11 @@ it('fetch data', () => {
     });
 
 
-  function expectItems(expected: Item[]) {
-    const { items } = wrapper.instance().state as IState;
-    expect(items)
+  function expectStorage(items: Item[]): void {
+    const { storage } = wrapper.instance().state as IState;
+    const expected = getExpected(items);
+    expect(storage.items)
       .toEqual(expected);
   }
+
 });

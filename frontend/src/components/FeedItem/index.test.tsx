@@ -2,12 +2,12 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import FeedItem from './index';
-import Item from 'api/records/Item';
+import * as records from 'data/records';
 
-import { getTestItem } from 'utils/testUtils/data/item';
+import { getTestItem } from 'utils/testUtils';
 
 it('renders without crashing', () => {
-  const item: Item = getTestItem();
+  const item: records.Item = getTestItem();
   const wrapper = shallow(<FeedItem item={ item } />);
 
   const Background = wrapper.find('Background');

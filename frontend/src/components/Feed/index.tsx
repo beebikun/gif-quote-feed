@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import Item from 'api/records/Item';
+import * as records from 'data/records';
 
 import FeedItem from 'components/FeedItem';
 
 
 export interface IProps {
-  items: Item[];
+  items: records.Item[];
 }
 
 

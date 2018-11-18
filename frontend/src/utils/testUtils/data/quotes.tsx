@@ -1,4 +1,4 @@
-import { COUNT, IQuote, IResponse } from 'api/Andruxnet';
+import { COUNT, IQuote, IResponse } from 'data/api/Andruxnet';
 
 export const _ITEM: IQuote = Object.freeze({ quote: 'quote', author: 'author' });
 

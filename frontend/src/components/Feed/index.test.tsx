@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import Feed from './index';
 
-import { generateTestItems } from 'utils/testUtils/data/item';
+import { generateTestItems } from 'utils/testUtils';
 
 
 it('render without crashing', () => {

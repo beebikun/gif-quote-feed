@@ -1,8 +1,9 @@
-import { IGifRaw, IResponse, SIZE_FIELD } from 'api/Giphy';
+import { IGifRaw, IResponse, SIZE_FIELD } from 'data/api/Giphy';
 
-import Gif from 'api/records/Gif';
+import * as records from 'data/records';
 
-export const _ITEM = new Gif({ height: 200, src: 'src', width: 200 });
+
+export const _ITEM = new records.Gif({ height: 200, src: 'src', width: 200 });
 
 export function getResponse(): IResponse {
   const _RAW_ITEM: IGifRaw = {

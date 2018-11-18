@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Gif from 'api/records/Gif';
+import * as records from 'data/records';
 
 import LazyImg, { IProps as ILazeImgProps } from 'components/LazyImg';
 
 
 export interface IProps {
-  src: Gif;
+  src: records.Gif;
 }
 
 export default function Img({ src }: IProps) {

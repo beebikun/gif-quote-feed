@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Item from 'api/records/Item';
+import * as records from 'data/records';
 
 import Background from './Background';
 import ButtonsGroup from './Buttons';
@@ -10,7 +10,7 @@ import Text from './Text';
 import './index.css';
 
 export interface IProps {
-  item: Item;
+  item: records.Item;
 }
 
 

@@ -1,17 +1,16 @@
 import axios from 'axios';
 
-import { BASE_URL as BACKEND_URL } from 'api/Backend';
 import {
   getResponse as getBackendResponse,
   getListReponse as getBackendListResponse
 } from 'utils/testUtils/data/backend';
 
-import { BASE_URL as QUOTE_URL } from 'api/Andruxnet';
+import { BASE_URL as QUOTE_URL } from 'data/api/Andruxnet';
 import {
   getResponse as getQuotesResponse,
 } from 'utils/testUtils/data/quotes';
 
-import { BASE_URL as GIF_URL } from 'api/Giphy';
+import { BASE_URL as GIF_URL } from 'data/api/Giphy';
 import {
   getResponse as getGifResponse,
 } from 'utils/testUtils/data/gif';
@@ -24,11 +23,8 @@ function responseFactory(url: string) {
   if (url.startsWith(GIF_URL)) {
     return getGifResponse();
   }
-  if (url.startsWith(BACKEND_URL)) {
-    return getBackendListResponse();
-  }
 
-  return;
+  return getBackendListResponse();
 }
 
 

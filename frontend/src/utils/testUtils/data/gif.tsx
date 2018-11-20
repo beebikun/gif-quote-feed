@@ -1,4 +1,4 @@
-import { IGifRaw, IResponse, SIZE_FIELD } from 'data/api/Giphy';
+import { IGifRaw, IResponse, SIZE_FIELD } from 'data/services/random/Giphy';
 
 import * as records from 'data/records';
 

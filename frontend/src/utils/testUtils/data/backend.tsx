@@ -1,5 +1,5 @@
 import { _ITEM as _GIF } from './gif';
-import { IItemRaw, IResponse } from 'data/api/Backend';
+import { IItemRaw, IResponse } from 'data/services/saved/Backend';
 
 export const _ITEM: IItemRaw = Object.freeze({ id: '1', gif: _GIF, text: 'text' });
 

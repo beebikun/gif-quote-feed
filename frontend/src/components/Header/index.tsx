@@ -6,8 +6,9 @@ import './index.css';
 export default function Header() {
   return (
     <div className='Header'>
-      <HeaderLink title='Random' />
-      <HeaderLink title='Saved' />
+      <HeaderLink title='Random' to='/' />
+      <HeaderLink title='Saved' to='/saved' />
+      <HeaderLink title='NotExists' to='/NotExists' />
     </div>
   );
 }

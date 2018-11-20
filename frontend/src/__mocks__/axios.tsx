@@ -5,12 +5,12 @@ import {
   getListReponse as getBackendListResponse
 } from 'utils/testUtils/data/backend';
 
-import { BASE_URL as QUOTE_URL } from 'data/api/Andruxnet';
+import { BASE_URL as QUOTE_URL } from 'data/services/random/Andruxnet';
 import {
   getResponse as getQuotesResponse,
 } from 'utils/testUtils/data/quotes';
 
-import { BASE_URL as GIF_URL } from 'data/api/Giphy';
+import { BASE_URL as GIF_URL } from 'data/services/random/Giphy';
 import {
   getResponse as getGifResponse,
 } from 'utils/testUtils/data/gif';

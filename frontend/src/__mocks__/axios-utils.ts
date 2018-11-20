@@ -1,10 +1,5 @@
 import axios from 'axios';
 
-// export interface IMockedModule {
-//   [key: string]: IMockedMethod;
-//   [key: string]: mockImplementationOnce;
-// }
-
 export interface IMockedMethod {
   mock: {
     calls: {

@@ -10,7 +10,7 @@ export interface IProps {
 // interface State {
 //   // src: string;
 // }
-
+// TODO: make me lazy
 export default class LazyImg extends React.Component<IProps, {}> {
   public state = {
     // src: '',

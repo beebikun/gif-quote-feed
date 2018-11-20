@@ -1,14 +1,25 @@
 import * as React from 'react';
+import { NavLink } from 'react-router-dom';
 import './index.css';
 
 interface IProps {
   title: string;
+  to: string;
 }
 
-export default function HeaderLink({ title }: IProps) {
+const activeStyle: React.CSSProperties = {
+  color: 'red',
+  fontWeight: 'bold',
+};
+
+export default function HeaderLink({ title, to }: IProps) {
   return (
-    <div className='HeaderLink'>
+    <NavLink
+      to={ to }
+      exact={ true }
+      activeStyle={ activeStyle }
+      >
       { title }
-    </div>
+    </NavLink>
   );
 }

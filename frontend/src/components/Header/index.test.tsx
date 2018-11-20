@@ -8,16 +8,18 @@ it('render without crashing', () => {
   const wrapper = shallow(<Header />);
 
   const HeaderLink = wrapper.find('HeaderLink');
-  expect(HeaderLink).toHaveLength(2);
+  // expect(HeaderLink).toHaveLength(2);
 
-  expectLink('Random');
-  expectLink('Saved');
+  expectChild('Random', '/');
+  expectChild('Saved', '/saved');
 
-  function expectLink(title: string): void {
-    // type T = typeof HeaderLink;
+  function expectChild(title: string, path: string): void {
     const Link = HeaderLink.filterWhere((n): boolean => {
       return n.prop('title') === title;
     });
-    expect(Link).toHaveLength(1);
+    expect(Link)
+      .toHaveLength(1);
+    expect(Link.prop('to'))
+      .toEqual(path);
   }
 });

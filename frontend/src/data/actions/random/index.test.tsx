@@ -5,15 +5,6 @@ import { CONSTANTS, actions } from './index';
 import { generateTestItems } from 'utils/testUtils';
 
 
-// it('set', () => {
-//   const items: records.Item[] = generateTestItems(3);
-//   const result = actions.setItems(items);
-//   expect(result.type)
-//     .toEqual(CONSTANTS.SET_ITEMS);
-//   expect(result.payload)
-//     .toEqual(items);
-// });
-
 it('fetch items', () => {
   const items: records.Item[] = generateTestItems(3);
   const fetchItems = actions.fetchItems;

@@ -1,6 +1,6 @@
-import RandomApi from './random';
 import BackendApi from './saved';
+import RandomApi from './random';
 
 export default {
-  RandomApi, BackendApi,
+  BackendApi, RandomApi,
 };

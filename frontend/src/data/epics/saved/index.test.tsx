@@ -1,4 +1,4 @@
-import { actions } from 'data/actions/random';
+import { actions } from 'data/actions/saved';
 import { ActionsObservable } from 'redux-observable';
 
 import * as records from 'data/records';

@@ -25,9 +25,3 @@ it('render without crashing', () => {
   expect(savedFetched)
     .toEqual(savedActions.fetchItems.request());
 });
-
-// -------------------------------------------
-// 2) move api to service
-// 3) add saved actions/epics/..
-// 4) fix real backend
-// -------------------------------------------

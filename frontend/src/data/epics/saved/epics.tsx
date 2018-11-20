@@ -5,7 +5,7 @@ import { filter, switchMap, map, catchError } from 'rxjs/operators';
 import { isActionOf } from 'typesafe-actions';
 
 // import { RootState, RootActions } from 'data/reducers';
-import { actions } from 'data/actions/random';
+import { actions } from 'data/actions/saved';
 
 // TODO: add types to Epic<>
 export const fetchItemsFlow: Epic = (action$, store, { RandomApi }) => {

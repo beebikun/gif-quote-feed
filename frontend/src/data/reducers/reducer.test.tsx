@@ -1,7 +1,8 @@
 import { action } from 'typesafe-actions';
 import reducer from './reducer';
 
-import { CONSTANTS } from 'data/actions/random';
+import { CONSTANTS as RANDOM_CONSTANTS } from 'data/actions/random';
+import { CONSTANTS as SAVED_CONSTANTS } from 'data/actions/saved';
 
 import * as records from 'data/records';
 import { getExpected, generateTestItems } from 'utils/testUtils';
@@ -45,12 +46,25 @@ it('unknown state: return old ItemStorage', () => {
 });
 
 
-it('set items: return new ItemStorage', () => {
+it('set items from random: return new ItemStorage', () => {
   const oldItems: records.Item[] = generateTestItems(2, 'must be replaced');
   const prevState = new records.ItemStorage(oldItems);
 
   const items: records.Item[] = generateTestItems(1, 'must replace');
-  const a = action(CONSTANTS.FETCH_ITEMS.SUCCESS, items);
+  const a = action(RANDOM_CONSTANTS.FETCH_ITEMS.SUCCESS, items);
+
+  const nextState = reducer(prevState, a);
+
+  expectStorage(nextState, items);
+});
+
+
+it('set items from saved: return new ItemStorage', () => {
+  const oldItems: records.Item[] = generateTestItems(2, 'must be replaced');
+  const prevState = new records.ItemStorage(oldItems);
+
+  const items: records.Item[] = generateTestItems(1, 'must replace');
+  const a = action(SAVED_CONSTANTS.FETCH_ITEMS.SUCCESS, items);
 
   const nextState = reducer(prevState, a);
 

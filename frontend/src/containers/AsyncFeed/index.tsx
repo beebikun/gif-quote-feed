@@ -1,18 +1,17 @@
+import * as Immutable from 'immutable';
 import { connect } from 'react-redux';
 
 import * as records from 'data/records';
 import { RootState } from 'data/reducers';
-import AsyncFeed, { IOwnProps } from './element';
+import { storageToItems } from 'data/reducers/utils';
+import AsyncFeed from './element';
 
-interface IState {
-  items: records.Item[];
-}
 
-function mapStateToProps(state: RootState): IState {
+function mapStateToProps(state: RootState) {
   return {
-    items: state.items.array(),
+    items: storageToItems(state.items),
   };
 }
 
-const connector = connect<IState, {}, IOwnProps>(mapStateToProps);
+const connector = connect(mapStateToProps);
 export default connector(AsyncFeed);

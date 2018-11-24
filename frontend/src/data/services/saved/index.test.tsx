@@ -1,78 +1,23 @@
 import * as records from 'data/records';
-
 import api from './index';
 import backedApi, { IItemRaw } from './Backend';
-import FakeID from 'utils/FakeID';
+import { FakeID } from 'utils';
 import { _ITEM as _BACKEND_ITEM } from 'utils/testUtils/data/backend';
 
-describe('Saved', () => {
-  it('create', () => {
-    const item = new records.Item({ ..._BACKEND_ITEM, id: FakeID.next() });
-    const newId = 'newId';
-    const mocked = getMock('create', { ..._BACKEND_ITEM, id: newId });
 
-    return api.saveItem(item)
-      .then((data: records.Item) => {
-        expect(mocked).toHaveBeenCalledTimes(1);
-        const { id, ...callData } = item.toObject() as IItemRaw;
-        expect(mocked).toHaveBeenCalledWith(callData);
-
-        testItem(data, newId);
-      });
-  });
-
-  it('edit', () => {
-    const item = new records.Item(_BACKEND_ITEM);
-    const mocked = getMock('edit', _BACKEND_ITEM);
-
-    return api.saveItem(item)
-      .then((data: records.Item) => {
-        expect(mocked).toHaveBeenCalledTimes(1);
-        expect(mocked).toHaveBeenCalledWith(item.id, item);
-
-        testItem(data, _BACKEND_ITEM.id);
-      });
-  });
-
-  it('delete', () => {
-    const item = new records.Item(_BACKEND_ITEM);
-    const mocked = getMock('delete', undefined);
-
-    return api.deleteItem(item)
-      .then((data: records.Item) => {
-        expect(mocked).toHaveBeenCalledTimes(1);
-        expect(mocked).toHaveBeenCalledWith(_BACKEND_ITEM.id);
-
-        testItem(data);
-      });
-  });
-
-  it('delete not existed', () => {
-    const item = new records.Item({ ..._BACKEND_ITEM, id: FakeID.next() });
-    const mocked = getMock('delete', undefined);
-
-    return api.deleteItem(item)
-      .then((data: records.Item) => {
-        expect(mocked).toHaveBeenCalledTimes(0);
-
-        testItem(data);
-        expect(data.id)
-          .toBe(item.id);
-      });
-  });
-
+describe('List', () => {
   it('list', () => {
     const items = [ _BACKEND_ITEM ];
-    const mocked = getMock('list', items);
+    const backendMocked = getMockedBackendMethod('list', items);
 
     return api.list()
       .then((data: records.Item[]) => {
-        expect(mocked).toHaveBeenCalledTimes(1);
+        expect(backendMocked).toHaveBeenCalledTimes(1);
 
         expectItemsList(data, items.length);
 
         const ids: string[] = data.map(({ id }) => id);
-        const fakeIds = ids.filter((id) => FakeID.isFake(id));
+        const fakeIds = ids.filter((id) => FakeID.is(id));
         expect(ids)
           .toHaveLength(items.length);
         expect(fakeIds)
@@ -80,40 +25,111 @@ describe('Saved', () => {
       });
   });
 
-  type BackendMethods = keyof typeof backedApi;
-  /* tslint:disable:no-any */
-  function getMock(method: BackendMethods, resolve: any) {
-    const mocked = jest.spyOn(backedApi, method);
-    /* tslint:disable:no-any */
-    mocked.mockImplementationOnce((): Promise<any> => Promise.resolve(resolve));
-    mocked.mockClear();
+  function expectItemsList(data: records.Item[], size: number) {
+    expect(data).toBeInstanceOf(Array);
+    expect(data).toHaveLength(size);
 
-    return mocked;
-  }
-
-
-  function testItem(result: records.Item, oldId?: string): void {
     const expected = expect.any(records.Item);
-    expect(result).toMatchObject(expected);
+    expect(data).toContainEqual(expected);
+  }
+});
 
-    const id: string = result.id;
-    const isFakeId = FakeID.isFake(id);
+describe('Item', () => {
+  describe('Save', () => {
+    const NEW_ID = 'savedId';
+
+    function callSave(item: records.Item, mustBeCalled: boolean): Promise<any> {
+      const backendMocked = getMockedBackendMethod('create', { ..._BACKEND_ITEM, id: NEW_ID });
+
+      return api.saveItem(item)
+        .then((data: records.Item) => {
+          expect(backendMocked).toHaveBeenCalledTimes(mustBeCalled ? 1 : 0);
+          if (mustBeCalled) {
+            const { id, ...callData } = item.toObject();
+            expect(backendMocked).toHaveBeenCalledWith(callData);
+          }
+
+          return data;
+        });
+    }
+
+    it('create: call backendApi and return new id', () => {
+      const notSavedItem = new records.Item({ ..._BACKEND_ITEM, id: FakeID.next() });
+
+      return callSave(notSavedItem, true)
+        .then((data: records.Item) => {
+          testItem(data, false, NEW_ID);
+        });
+    });
+
+    it('create already existed: doesnt call backedApi, return the same item', () => {
+      const SAVED_ID = 'some saved id';
+      const savedItem = new records.Item({ ..._BACKEND_ITEM, id: SAVED_ID });
+
+      return callSave(savedItem, false)
+        .then((data: records.Item) => {
+          testItem(data, false, SAVED_ID);
+        });
+    });
+  });
+
+  describe('Delete', () => {
+    function callDelete(item: records.Item, mustBeCalled: boolean): Promise<any> {
+      const backendMocked = getMockedBackendMethod('delete', undefined);
+
+      return api.deleteItem(item)
+        .then((data: records.Item) => {
+          expect(backendMocked).toHaveBeenCalledTimes(mustBeCalled ? 1 : 0);
+          if (mustBeCalled) {
+            expect(backendMocked).toHaveBeenCalledWith(item.id);
+          }
+
+          return data;
+        });
+    }
+
+    it('delete: call backedApi and return new fake id', () => {
+      const savedItem = new records.Item(_BACKEND_ITEM);
+
+      return callDelete(savedItem, true)
+        .then((data: records.Item) => {
+          testItem(data, true, null);
+        });
+    });
+
+    it('delete not existed: doesnt call backedApi, return the same item', () => {
+      const notSavedItem = new records.Item({ ..._BACKEND_ITEM, id: FakeID.next() });
+
+      return callDelete(notSavedItem, false)
+        .then((data: records.Item) => {
+          testItem(data, true, notSavedItem.id);
+        });
+    });
+  });
+
+  function testItem(item: records.Item, isFake: boolean,
+                    itemId: string | null): void {
+    expect(item).toBeInstanceOf(records.Item);
+
+    const isFakeId = FakeID.is(item.id);
     expect(isFakeId)
-      .toBe(oldId === undefined);
+      .toBe(isFake);
 
-    if (oldId) {
-      expect(id)
-        .toBe(oldId);
+    if (itemId !== null) {
+      expect(item.id)
+        .toEqual(itemId);
     }
   }
 });
 
+type BackendMethods = keyof typeof backedApi;
+/* tslint:disable:no-any */
+function getMockedBackendMethod(method: BackendMethods, resolve: any) {
+  const backendMocked = jest.spyOn(backedApi, method);
+  /* tslint:disable:no-any */
+  backendMocked.mockImplementationOnce((): Promise<any> => Promise.resolve(resolve));
+  backendMocked.mockClear();
 
-function expectItemsList(data: records.Item[], size: number) {
-  expect(data).toBeInstanceOf(Array);
-  expect(data).toHaveLength(size);
-
-  const expected = expect.any(records.Item);
-  expect(data).toContainEqual(expected);
+  return backendMocked;
 }
 

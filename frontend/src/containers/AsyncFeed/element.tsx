@@ -2,15 +2,13 @@ import * as React from 'react';
 
 import * as records from 'data/records';
 import { RootActions } from 'data/reducers';
-
+import { IStorageEntry } from 'data/reducers/utils';
 import FeedItem from 'components/FeedItem';
 
-export interface IOwnProps {
-  fetch: () => RootActions;
-}
 
-interface IProps extends IOwnProps {
-  items: records.Item[];
+interface IProps {
+  fetch: () => RootActions;
+  items: IStorageEntry[];
 }
 
 
@@ -24,7 +22,7 @@ export default class AsyncFeed extends React.Component<IProps, {}> {
 
     return (
       <div className='Feed'>
-        { items.map((item, i) => <FeedItem key={ i } item={ item } />) }
+        { items.map(([key, item]) => <FeedItem key={ key } storageKey={ key } item={ item } />) }
       </div>
     );
   }

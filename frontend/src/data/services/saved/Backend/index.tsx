@@ -4,8 +4,7 @@ import * as records from 'data/records';
 
 import { API_URL } from './secrets';
 
-import { _ITEM } from 'utils/testUtils/data/backend';
-import generateArray from 'utils/generateArray';
+import { getListReponse } from 'utils/testUtils/data/backend';
 
 export interface IUnsavedItem {
   gif: records.Gif;
@@ -24,7 +23,7 @@ export interface IResponse<T= IItemRaw> {
 // TODO: 4) fix real backend
 class Api {
   public list(): Promise<IItemRaw[]> {
-    const items: IItemRaw[] = generateArray<IItemRaw>(3, () => _ITEM);
+    const items: IItemRaw[] = getListReponse().data;
 
     return  Promise.resolve(items);
     // const url = API_URL;

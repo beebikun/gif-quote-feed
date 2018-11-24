@@ -6,9 +6,11 @@ import * as records from 'data/records';
 
 import { getTestItem } from 'utils/testUtils';
 
+const KEY = 'STORAGE_KEY';
+
 it('renders without crashing', () => {
   const item: records.Item = getTestItem();
-  const wrapper = shallow(<FeedItem item={ item } />);
+  const wrapper = shallow(<FeedItem item={ item } storageKey={ KEY } />);
 
   const Background = wrapper.find('Background');
   expect(Background).toHaveLength(1);
@@ -22,6 +24,8 @@ it('renders without crashing', () => {
   expect(Buttons).toHaveLength(1);
   expect(Buttons.prop('itemId'))
     .toEqual(item.id);
+  expect(Buttons.prop('storageKey'))
+    .toEqual(KEY);
 
   const Text = wrapper.find('Text');
   expect(Text).toHaveLength(1);

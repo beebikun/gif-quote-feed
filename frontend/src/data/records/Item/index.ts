@@ -30,7 +30,7 @@ export default class Item extends Immutable.Record(defaultProps) implements IPro
   }
 
   public getId(): string | undefined {
-    if (FakeID.isFake(this.id)) {
+    if (FakeID.is(this.id)) {
       return undefined;
     } else {
       return this.id;

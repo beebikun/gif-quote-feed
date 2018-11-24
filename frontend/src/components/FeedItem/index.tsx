@@ -11,15 +11,16 @@ import './index.css';
 
 export interface IProps {
   item: records.Item;
+  storageKey: string;
 }
 
 
-export default function FeedItem({ item }: IProps) {
+export default function FeedItem({ item, storageKey }: IProps) {
   return (
     <Background>
       <Img src={ item.gif } />
 
-      <ButtonsGroup itemId={ item.id } />
+      <ButtonsGroup itemId={ item.id } storageKey={ storageKey } />
 
       <Text text={ item.text } />
     </Background>

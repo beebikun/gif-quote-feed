@@ -4,4 +4,9 @@ export default {
     REQUEST: 'random_items/fetch/request',
     SUCCESS: 'random_items/fetch/success',
   },
+  FETCH_GIF: {
+    ERROR: 'random_items/gif/error',
+    REQUEST: 'random_items/gif/request',
+    SUCCESS: 'random_items/gif/success',
+  },
 };

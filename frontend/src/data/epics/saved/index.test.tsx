@@ -1,50 +1,41 @@
 import { actions } from 'data/actions/saved';
-import { ActionsObservable } from 'redux-observable';
-
 import * as records from 'data/records';
-import { generateTestItems } from 'utils/testUtils';
 
 import * as epics from './epics';
+import { IStorageEntry } from 'data/reducers/utils';
+import { generateTestItems, getTestItem } from 'utils/testUtils';
+import { expectFlow } from 'utils/testUtils/epics';
 
-it('fetchItems: success', () => {
+const API_NAME = 'SavedApi';
+const KEY = 'STORAGE_KEY';
+
+describe('fetchItems', () => {
   const items: records.Item[] = generateTestItems(2);
-  const fetchItems = actions.fetchItems;
-  const request = fetchItems.request();
-  const success = fetchItems.success(items);
-
-  const RandomApi = {
-    list: jest.fn(() => Promise.resolve(items))
-  };
-
-  const action$ = ActionsObservable.of(request);
-  // tslint:disable-next-line:no-any
-  const output$ = epics.fetchItemsFlow(action$, {} as any, { RandomApi });
-
-  return output$.toPromise()
-    .then(action => {
-      expect(action).toEqual(success);
-      expect(RandomApi.list).toHaveBeenCalledTimes(1);
-    });
+  expectFlow(actions.fetchItems, epics.fetchItemsFlow,
+    { name: API_NAME, method: 'list' }, {
+    success: items,
+  });
 });
 
-it('fetchItems: fail', () => {
-  const error = Error('Failure reason');
-  const fetchItems = actions.fetchItems;
-  const request = fetchItems.request();
-  const fail = fetchItems.failure(error);
 
-  const RandomApi = {
-    list: jest.fn(() => Promise.reject(error))
-  };
+describe('saveItem', () => {
+  const item: records.Item = getTestItem();
+  const entry: IStorageEntry = [KEY, item];
+  expectFlow(actions.saveItem, epics.saveItemFlow,
+    { name: API_NAME, method: 'saveItem', params: [item] }, {
+    request: KEY,
+    success: entry,
+    successApi: item,
+  }, { [ KEY ]: item });
+});
 
-  const action$ = ActionsObservable.of(request);
-  // tslint:disable-next-line:no-any
-  const output$ = epics.fetchItemsFlow(action$, {} as any, { RandomApi });
-
-  return output$.toPromise()
-    .then(action => {
-      expect(action).toEqual(fail);
-      expect(RandomApi.list).toHaveBeenCalledTimes(1);
-      expect(RandomApi.list).rejects.toThrow(error);
-    });
+describe('deleteItem', () => {
+  const item: records.Item = getTestItem();
+  const entry: IStorageEntry = [KEY, item];
+  expectFlow(actions.deleteItem, epics.deleteItemFlow,
+    { name: API_NAME, method: 'deleteItem', params: [item] }, {
+    request: KEY,
+    success: entry,
+    successApi: item,
+  }, { [ KEY ]: item });
 });

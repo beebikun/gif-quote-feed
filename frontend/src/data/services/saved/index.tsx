@@ -1,5 +1,6 @@
 import * as records from 'data/records';
 import backendApi, { IItemRaw, IUnsavedItem } from './Backend';
+import { records.Item } from 'data/reducers/utils';
 
 class Api {
   public list(): Promise<records.Item[]> {
@@ -13,17 +14,14 @@ class Api {
 
   public saveItem(item: records.Item): Promise<records.Item> {
     const id = item.getId();
+    if (id !== undefined) {
+      return Promise.resolve(item);
+    }
 
-    if (id === undefined) {
-      return backendApi.create(item.data() as IUnsavedItem)
-        .then((rawItem: IItemRaw) => {
-          return item.set('id', rawItem.id);
-        });
-    }
-    else {
-      return backendApi.edit(id, item)
-        .then(() => item);
-    }
+    return backendApi.create(item.data() as IUnsavedItem)
+      .then((rawItem: IItemRaw) => {
+        return item.set('id', rawItem.id);
+      });
   }
 
   public deleteItem(item: records.Item): Promise<records.Item> {

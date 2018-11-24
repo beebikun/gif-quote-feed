@@ -1,4 +1,4 @@
 import { combineEpics } from 'redux-observable';
-import { fetchItemsFlow } from './epics';
+import { fetchItemsFlow, fetchGifFlow } from './epics';
 
-export default combineEpics(fetchItemsFlow);
+export default combineEpics(fetchItemsFlow, fetchGifFlow);

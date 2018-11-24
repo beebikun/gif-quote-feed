@@ -5,7 +5,7 @@ import * as records from 'data/records';
 
 import api from './index';
 
-import FakeID from 'utils/FakeID';
+import { FakeID } from 'utils';
 import generateArray from 'utils/generateArray';
 
 import { _ITEM as _GIF_ITEM } from 'utils/testUtils/data/gif';
@@ -40,7 +40,7 @@ describe('Random', () => {
 
         const ids: string[] = data.map(({ id }) => id);
         const uniqIds = new Set(ids).size;
-        const fakeIds = ids.filter((id) => FakeID.isFake(id));
+        const fakeIds = ids.filter((id) => FakeID.is(id));
         expect(ids)
           .toHaveLength(uniqIds);
         expect(fakeIds)

@@ -5,7 +5,6 @@ import rootReducer from '../reducers';
 import rootEpic from '../epics';
 import services from '../services';
 
-// TODO: add types to createEpicMiddleware<>
 export const epicMiddleware = createEpicMiddleware({dependencies : services});
 
 export default function configureStore(initialState?: object) {

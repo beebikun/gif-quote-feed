@@ -1,22 +1,19 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
+
 import { RootActions } from 'data/reducers';
 import { actions as randomActions } from 'data/actions/random';
-import { actions as savedActions } from 'data/actions/saved';
-import RoutedBody from './element';
+import Button from './element';
 
 
-const fetchRandom = randomActions.fetchItems;
-const fetchSaved = savedActions.fetchItems;
-
+const asyncAction = randomActions.fetchGif;
 
 function mapDispatchToProps(dispatch: Dispatch<RootActions>) {
   return bindActionCreators({
-    fetchRandom: fetchRandom.request,
-    fetchSaved: fetchSaved.request,
+    updateGif: asyncAction.request,
   }, dispatch);
 }
 
 const connector = connect(null, mapDispatchToProps);
-export default connector(RoutedBody);
+export default connector(Button);

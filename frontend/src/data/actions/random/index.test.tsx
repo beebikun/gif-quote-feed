@@ -2,26 +2,23 @@ import * as records from 'data/records';
 
 import { CONSTANTS, actions } from './index';
 ​
-import { generateTestItems } from 'utils/testUtils';
+import { generateTestItems, getTestItem } from 'utils/testUtils';
+import { expectAsyncActions } from 'utils/testUtils/actions';
 
+const KEY = 'STORAGE_KEY';
 
-it('fetch items', () => {
+it.only('fetch items', () => {
   const items: records.Item[] = generateTestItems(3);
-  const fetchItems = actions.fetchItems;
-  const requestResult = fetchItems.request();
-  expect(requestResult).toEqual({
-    type: CONSTANTS.FETCH_ITEMS.REQUEST,
+  expectAsyncActions(actions.fetchItems, CONSTANTS.FETCH_ITEMS, {
+    SUCCESS: items,
   });
+});
 
-  const successResult = fetchItems.success(items);
-  expect(successResult).toEqual({
-    payload: items,
-    type: CONSTANTS.FETCH_ITEMS.SUCCESS,
-  });
 
-  const failureResult = fetchItems.failure(Error('Failure reason'));
-  expect(failureResult).toEqual({
-    payload: Error('Failure reason'),
-    type: CONSTANTS.FETCH_ITEMS.ERROR,
+it.only('fetch gif', () => {
+  const item: records.Item = getTestItem();
+  expectAsyncActions(actions.fetchGif, CONSTANTS.FETCH_GIF, {
+    REQUEST: KEY,
+    SUCCESS: [KEY, item],
   });
 });

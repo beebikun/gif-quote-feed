@@ -1,4 +1,8 @@
 import { combineEpics } from 'redux-observable';
-import { fetchItemsFlow } from './epics';
+import { fetchItemsFlow, saveItemFlow, deleteItemFlow } from './epics';
 
-export default combineEpics(fetchItemsFlow);
+export default combineEpics(
+  deleteItemFlow,
+  fetchItemsFlow,
+  saveItemFlow,
+);

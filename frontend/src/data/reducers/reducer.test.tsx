@@ -1,72 +1,139 @@
 import { action } from 'typesafe-actions';
 import reducer from './reducer';
-
+import {
+  storageFromItems, storageToItems,
+  IStorageEntry, IStorage,
+} from './utils';
+import * as Immutable from 'immutable';
 import { CONSTANTS as RANDOM_CONSTANTS } from 'data/actions/random';
 import { CONSTANTS as SAVED_CONSTANTS } from 'data/actions/saved';
 
 import * as records from 'data/records';
-import { getExpected, generateTestItems } from 'utils/testUtils';
+import { generateTestItems } from 'utils/testUtils';
 
 
-function expectStorage(storage: records.ItemStorage, items: records.Item[]) {
-  const expectedType = expect.any(records.ItemStorage);
-  expect(storage)
-    .toMatchObject(expectedType);
+function expectStorageItems(storage: IStorage,
+                            items: records.Item[]): records.Item[] {
+  const storedItems: records.Item[] = Object.values(storage.toObject());
+  const storedIds: string[] = toIds(storedItems);
+  const expectedIds: string[] = toIds(items);
 
-  const expectedItems = getExpected(items);
-  expect(storage.items)
-    .toEqual(expectedItems);
+  expect(storedIds)
+    .toEqual(expectedIds);
+
+  return storedItems;
+
+  function toIds(items: records.Item[]) {
+    return items.map(i => i.id);
+  }
 }
 
 
-it('initial state: return new ItemStorage', () => {
-  const prevState = undefined;
+function expectStorageKeys(oldStorage, newStorage, not?: boolean) {
+  const oldKeys = oldStorage.keys();
+  const newKeys = newStorage.keys();
 
-  const items: records.Item[] = [];
-  // tslint:disable-next-line:no-any
-  const a = action('unknown') as any;
+  if (not) {
+    expect(newKeys)
+      .not.toEqual(oldKeys);
+  } else {
+    expect(newKeys)
+      .toEqual(oldKeys);
+  }
+}
 
-  const nextState = reducer(prevState, a);
+describe('DEFAULT CASE', () => {
+  it('initial state: create new Map', () => {
+    // tslint:disable-next-line:no-any
+    const a = action('unknown') as any;
 
-  expectStorage(nextState, items);
+    const nextState = reducer(undefined, a);
+    expect(nextState)
+      .toEqual(Immutable.OrderedMap());
+  });
+
+  it('unknown state: return old Map', () => {
+    const oldItems: records.Item[] = generateTestItems(2, 'must stay');
+    const prevState = storageFromItems(oldItems);
+
+    const items: records.Item[] = generateTestItems(2, 'must pass off');
+    // tslint:disable-next-line:no-any
+    const a = action('unknown', items) as any;
+
+    const nextState = reducer(prevState, a);
+    expectStorageItems(nextState, oldItems);  // items werent change
+    expectStorageKeys(prevState, nextState); // keys werent change
+  });
 });
 
 
-it('unknown state: return old ItemStorage', () => {
-  const oldItems: records.Item[] = generateTestItems(2, 'must stay');
-  const prevState = new records.ItemStorage(oldItems);
 
-  const items: records.Item[] = generateTestItems(2, 'must pass off');
-  // tslint:disable-next-line:no-any
-  const a = action('unknown', items) as any;
 
-  const nextState = reducer(prevState, a);
+describe('SET NEW ITEMS: return new Map', () => {
+  function expectSet(type: string): void {
+    const oldItems: records.Item[] = generateTestItems(2, 'old items');
+    const prevState = storageFromItems(oldItems);
 
-  expectStorage(nextState, oldItems);
+    const items: records.Item[] = generateTestItems(1, 'new items');
+    const a = action(type, items);
+
+    const nextState = reducer(prevState, a);
+    expectStorageItems(nextState, items);  // new items are set
+    expectStorageKeys(prevState, nextState, true); // new keys are set
+  }
+
+  it('set items from random: return new ItemStorage', () => {
+    expectSet(RANDOM_CONSTANTS.FETCH_ITEMS.SUCCESS);
+  });
+
+  it('set items from saved: return new ItemStorage', () => {
+    expectSet(SAVED_CONSTANTS.FETCH_ITEMS.SUCCESS);
+  });
 });
 
+describe('EDIT ITEM IN STORAGE: return old Map', () => {
+  function expectEdit(editFn, expectFn): void {
+    const idx = 1;
+    const oldItems: records.Item[] = generateTestItems(3);
+    const prevState = storageFromItems(oldItems);
+    const [ key, item ] = storageToItems(prevState)[idx];
+    const value = editFn(item);
+    const a = action(RANDOM_CONSTANTS.FETCH_GIF.SUCCESS, [ key, value ]);
+    const nextState = reducer(prevState, a);
+    expectStorageKeys(prevState, nextState); // keys werent change
+    const newItems = Object.values(nextState.toObject());
+    newItems.forEach((storagedItem, i) => {
+      if (i !== idx) {
+        expect(storagedItem)
+          .toEqual(oldItems[i]);
+      } else {
+        expect(storagedItem)
+          .toEqual(value);
+      }
+    });
+  };
 
-it('set items from random: return new ItemStorage', () => {
-  const oldItems: records.Item[] = generateTestItems(2, 'must be replaced');
-  const prevState = new records.ItemStorage(oldItems);
+  it('edit item: change gif', () => {
+    const newValue = 'othergif';
+    expectEdit(function (item: records.Item): records.Item {
+      return item.set('gif', newValue);
+    });
+  });
 
-  const items: records.Item[] = generateTestItems(1, 'must replace');
-  const a = action(RANDOM_CONSTANTS.FETCH_ITEMS.SUCCESS, items);
 
-  const nextState = reducer(prevState, a);
+  it('Delete item', () => {
+    const newValue = 'fakeId';
+    expectEdit(function (item: records.Item): records.Item {
+      return item.set('id', newValue);
+    });
+  });
 
-  expectStorage(nextState, items);
+
+  it('Save item', () => {
+    const newValue = 'savedId';
+    expectEdit(function (item: records.Item): records.Item {
+      return item.set('id', newValue);
+    });
+  });
 });
 
-
-it('set items from saved: return new ItemStorage', () => {
-  const oldItems: records.Item[] = generateTestItems(2, 'must be replaced');
-  const prevState = new records.ItemStorage(oldItems);
-
-  const items: records.Item[] = generateTestItems(1, 'must replace');
-  const a = action(SAVED_CONSTANTS.FETCH_ITEMS.SUCCESS, items);
-
-  const nextState = reducer(prevState, a);
-
-  expectStorage(nextState, items);
-});

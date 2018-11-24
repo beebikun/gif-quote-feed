@@ -1,23 +1,20 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
+import { ShallowWrapper } from 'enzyme';
 
 import Connected from './index';
-
+import { IStorageEntry, storageFromItems } from 'data/reducers/utils';
 import * as records from 'data/records';
-import configureStore from 'redux-mock-store';
 import { generateTestItems } from 'utils/testUtils';
-
-const mockStore = configureStore();
+import { getConnectedWrapper } from 'utils/testUtils/containers';
 
 it('render without crashing', () => {
   const storageItems = generateTestItems(2);
-  const store = mockStore({ items: new records.ItemStorage(storageItems) });
-  // Connected itself doesnot have store property so need to fix it
-  const props = { store, fetch: jest.fn() };
+  const initialState = { items: storageFromItems(storageItems) };
+  const ownProps = { fetch: jest.fn() };
+  const wrapper: ShallowWrapper = getConnectedWrapper(Connected, { props: ownProps, initialState });
+
   // tslint:disable-next-line:no-any
-  const wrapper = shallow(<Connected {...props as any} />);
-  // tslint:disable-next-line:no-any
-  const { items } = wrapper.props() as any;
-  expect(items)
+  const items: IStorageEntry[] = (wrapper.props() as any).items;
+  expect(items.map(i => i[1]))
     .toEqual(storageItems);
 });

@@ -3,26 +3,27 @@ import { shallow } from 'enzyme';
 
 import * as records from 'data/records';
 import AsyncFeed from './element';
-
+import { IStorageEntry, storageFromItems } from 'data/reducers/utils';
 import { generateTestItems } from 'utils/testUtils';
+
+const ITEMS: IStorageEntry[] = generateTestItems(2)
+  .map((item: records.Item, i: number) => ['STORAGE_KEY_' + i, item]);
 
 it('render without crashing', () => {
   const fetch = jest.fn();
-  const items: records.Item[] = generateTestItems(2);
-  const wrapper = shallow(<AsyncFeed fetch={ fetch } items={ items } />);
+  const wrapper = shallow(<AsyncFeed fetch={ fetch } items={ ITEMS } />);
   const Item = wrapper.find('FeedItem');
-  expect(Item).toHaveLength(items.length);
+  expect(Item).toHaveLength(ITEMS.length);
 });
 
 
 it('fetch data', () => {
-  const items: records.Item[] = generateTestItems(2);
   const fetch = jest.fn();
 
   const render = jest.spyOn(AsyncFeed.prototype, 'render');
 
   const options = { lifecycleExperimental: false, disableLifecycleMethods: true };
-  const wrapper = shallow(<AsyncFeed fetch={ fetch } items={ items } />, options);
+  const wrapper = shallow(<AsyncFeed fetch={ fetch } items={ ITEMS } />, options);
 
   expect(render).toHaveBeenCalledTimes(1);  // initial render
   expect(fetch).toHaveBeenCalledTimes(0);
@@ -35,5 +36,4 @@ it('fetch data', () => {
     .then(() => {
       expect(fetch).toHaveBeenCalledTimes(1);
     });
-
 });

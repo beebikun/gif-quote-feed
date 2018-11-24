@@ -28,7 +28,7 @@ it('create without id', () => {
     gif: new Gif(),
     text: '111',
   });
-  expect(FakeID.isFake(item.id))
+  expect(FakeID.is(item.id))
     .toBe(true);
 });
 
@@ -54,11 +54,11 @@ it('reset id', () => {
     id: '1',
     text: '111',
   });
-  expect(FakeID.isFake(item.id))
+  expect(FakeID.is(item.id))
     .toBe(false);
 
   const reseted = item.resetId();
-  expect(FakeID.isFake(reseted.id))
+  expect(FakeID.is(reseted.id))
     .toBe(true);
 });
 

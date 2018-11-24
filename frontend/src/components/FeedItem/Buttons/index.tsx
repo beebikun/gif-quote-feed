@@ -2,43 +2,22 @@ import * as React from 'react';
 
 import './index.css';
 
-// import { ButtonAdd } from 'containers/Buttons';
+import ButtonToggleSaved from 'containers/ButtonToggleSaved';
+import ButtonRandomGif from 'containers/ButtonRandomGif';
+
+import { FakeID } from 'utils';
 
 export interface IProps {
+  storageKey: string;
   itemId: string;
 }
 
-// <div className='Item__btns'>
-//           <div className='Button Button--refresh' />
-//           <div className='Button Button--edit' />
-//           <div className='Button Button--decline' />
-//           <div className='Button Button--accept' />
-//           <div className='Button Button--star' />
-//           <div className='Button Button--star-filled' />
-//         </div>
-
-function ButtonRefresh() {
-  return (<div className='Button Button--refresh' onClick={ handleClick } />);
-
-  function handleClick() {
-    console.log('refresh');
-  }
-}
-
-
-function ButtonAdd() {
-  return (<div className='Button Button--star' onClick={ handleClick } />);
-
-  function handleClick() {
-    console.log('star');
-  }
-}
-
-export default function Buttons(props: IProps) {
+export default function Buttons({ storageKey, itemId }: IProps) {
+  const isSaved = !FakeID.is(itemId);
   return (
     <div className='Item__btns'>
-      <ButtonRefresh />
-      <ButtonAdd />
+      <ButtonToggleSaved storageKey={ storageKey } isSaved={ isSaved } />
+      { isSaved === false && <ButtonRandomGif storageKey={ storageKey } />}
     </div>
   );
 }

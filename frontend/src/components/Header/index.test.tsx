@@ -8,7 +8,7 @@ it('render without crashing', () => {
   const wrapper = shallow(<Header />);
 
   const HeaderLink = wrapper.find('HeaderLink');
-  // expect(HeaderLink).toHaveLength(2);
+  expect(HeaderLink).toHaveLength(2);
 
   expectChild('Random', '/');
   expectChild('Saved', '/saved');

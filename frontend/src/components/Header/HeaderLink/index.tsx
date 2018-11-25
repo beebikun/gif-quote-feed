@@ -7,17 +7,13 @@ interface IProps {
   to: string;
 }
 
-const activeStyle: React.CSSProperties = {
-  color: 'red',
-  fontWeight: 'bold',
-};
-
 export default function HeaderLink({ title, to }: IProps) {
   return (
     <NavLink
       to={ to }
       exact={ true }
-      activeStyle={ activeStyle }
+      activeClassName='HeaderLink--active'
+      className='HeaderLink'
       >
       { title }
     </NavLink>

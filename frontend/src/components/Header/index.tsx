@@ -8,7 +8,6 @@ export default function Header() {
     <div className='Header'>
       <HeaderLink title='Random' to='/' />
       <HeaderLink title='Saved' to='/saved' />
-      <HeaderLink title='NotExists' to='/NotExists' />
     </div>
   );
 }

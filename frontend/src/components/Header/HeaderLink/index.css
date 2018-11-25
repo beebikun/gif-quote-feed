@@ -1,0 +1,15 @@
+.HeaderLink {
+	color: black;
+	margin: 0 10px;
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px 0;
+	font-family: 'Cormorant Garamond', serif;
+}
+
+.HeaderLink--active {
+	font-weight: bold;
+	border: 2px dashed;
+	box-sizing: border-box;
+}

@@ -1,12 +1,10 @@
 import { IAsyncAction } from 'data/reducers/types';
 
-interface IProps {
-  // tslint:disable-next-line:no-any
-  REQUEST: any;
-  // tslint:disable-next-line:no-any
-  SUCCESS: any;
-  // tslint:disable-next-line:no-any
-  ERROR: any;
+// tslint:disable-next-line:no-any
+interface IProps<T = any> {
+  REQUEST: T;
+  SUCCESS: T;
+  ERROR: T;
 }
 
 export function expectAsyncActions(asyncAction: IAsyncAction,

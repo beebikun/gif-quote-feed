@@ -1,12 +1,10 @@
 import * as React from 'react';
-
-import * as records from 'data/records';
 import { RootActions } from 'data/reducers';
 import { IStorageEntry } from 'data/reducers/utils';
 import FeedItem from 'components/FeedItem';
 
 
-interface IProps {
+export interface IProps {
   fetch: () => RootActions;
   items: IStorageEntry[];
 }

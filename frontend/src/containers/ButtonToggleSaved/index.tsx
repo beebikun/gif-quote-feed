@@ -17,5 +17,4 @@ function mapDispatchToProps(dispatch: Dispatch<RootActions>) {
   }, dispatch);
 }
 
-const connector = connect(null, mapDispatchToProps);
-export default connector(Button);
+export default connect(null, mapDispatchToProps)(Button);

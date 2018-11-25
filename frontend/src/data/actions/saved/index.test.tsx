@@ -16,7 +16,7 @@ it('fetch items', () => {
 
 it('delete item', () => {
   const item: records.Item = getTestItem();
-  const entry = [KEY, item];
+  const entry: IStorageEntry = [KEY, item];
   expectAsyncActions(actions.deleteItem, CONSTANTS.DELETE_ITEM, {
     REQUEST: KEY,
     SUCCESS: entry,
@@ -25,7 +25,7 @@ it('delete item', () => {
 
 it('save item', () => {
   const item: records.Item = getTestItem();
-  const entry = [KEY, item];
+  const entry: IStorageEntry = [KEY, item];
   expectAsyncActions(actions.saveItem, CONSTANTS.SAVE_ITEM, {
     REQUEST: KEY,
     SUCCESS: entry,

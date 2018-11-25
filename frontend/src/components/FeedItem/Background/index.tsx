@@ -5,13 +5,21 @@ export interface IProps {
   children: React.ReactNode;
 }
 
+export default class Background extends React.Component<IProps, {}> {
+  private bg: string;
 
-export default function Background({ children }: IProps) {
-  return (
-    <div className='Item' style={ { backgroundColor: getRandomColor() } } >
-      <div className='Item__content'>
-        { children }
+  public constructor(props: IProps) {
+    super(props);
+    this.bg = getRandomColor();
+  }
+
+  public render() {
+    return (
+      <div className='Item' style={ { backgroundColor: this.bg } } >
+        <div className='Item__content'>
+          { this.props.children }
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

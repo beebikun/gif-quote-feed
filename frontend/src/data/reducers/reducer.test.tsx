@@ -1,27 +1,30 @@
-import { action } from 'typesafe-actions';
-import reducer from './reducer';
-import {
-  storageFromItems, storageToItems,
-  IStorageEntry, IStorage,
-} from './utils';
 import * as Immutable from 'immutable';
+import { action } from 'typesafe-actions';
+
 import { CONSTANTS as RANDOM_CONSTANTS } from 'data/actions/random';
 import { CONSTANTS as SAVED_CONSTANTS } from 'data/actions/saved';
-
 import * as records from 'data/records';
 import { generateTestItems } from 'utils/testUtils';
 
+import reducer from './reducer';
+import { RootActions } from './types';
+import {
+  storageFromItems, storageToItems, IStorage,
+} from './utils';
+
+function storageItemsArray(storage: IStorage): records.Item[] {
+  return storageToItems(storage)
+    .map(entry => entry[1]);
+}
 
 function expectStorageItems(storage: IStorage,
-                            items: records.Item[]): records.Item[] {
-  const storedItems: records.Item[] = Object.values(storage.toObject());
+                            expectedItems: records.Item[]): void {
+  const storedItems: records.Item[] = storageItemsArray(storage);
   const storedIds: string[] = toIds(storedItems);
-  const expectedIds: string[] = toIds(items);
+  const expectedIds: string[] = toIds(expectedItems);
 
   expect(storedIds)
     .toEqual(expectedIds);
-
-  return storedItems;
 
   function toIds(items: records.Item[]) {
     return items.map(i => i.id);
@@ -29,7 +32,8 @@ function expectStorageItems(storage: IStorage,
 }
 
 
-function expectStorageKeys(oldStorage, newStorage, not?: boolean) {
+function expectStorageKeys(oldStorage: IStorage, newStorage: IStorage,
+                           not?: boolean): void {
   const oldKeys = oldStorage.keys();
   const newKeys = newStorage.keys();
 
@@ -44,8 +48,7 @@ function expectStorageKeys(oldStorage, newStorage, not?: boolean) {
 
 describe('DEFAULT CASE', () => {
   it('initial state: create new Map', () => {
-    // tslint:disable-next-line:no-any
-    const a = action('unknown') as any;
+    const a = action('unknown') as RootActions;
 
     const nextState = reducer(undefined, a);
     expect(nextState)
@@ -57,16 +60,13 @@ describe('DEFAULT CASE', () => {
     const prevState = storageFromItems(oldItems);
 
     const items: records.Item[] = generateTestItems(2, 'must pass off');
-    // tslint:disable-next-line:no-any
-    const a = action('unknown', items) as any;
+    const a = action('unknown', items) as RootActions;
 
     const nextState = reducer(prevState, a);
     expectStorageItems(nextState, oldItems);  // items werent change
     expectStorageKeys(prevState, nextState); // keys werent change
   });
 });
-
-
 
 
 describe('SET NEW ITEMS: return new Map', () => {
@@ -92,7 +92,7 @@ describe('SET NEW ITEMS: return new Map', () => {
 });
 
 describe('EDIT ITEM IN STORAGE: return old Map', () => {
-  function expectEdit(editFn, expectFn): void {
+  function expectEdit(editFn: (item: records.Item) => records.Item): void {
     const idx = 1;
     const oldItems: records.Item[] = generateTestItems(3);
     const prevState = storageFromItems(oldItems);
@@ -101,8 +101,8 @@ describe('EDIT ITEM IN STORAGE: return old Map', () => {
     const a = action(RANDOM_CONSTANTS.FETCH_GIF.SUCCESS, [ key, value ]);
     const nextState = reducer(prevState, a);
     expectStorageKeys(prevState, nextState); // keys werent change
-    const newItems = Object.values(nextState.toObject());
-    newItems.forEach((storagedItem, i) => {
+    const newItems: records.Item[] = storageItemsArray(nextState);
+    newItems.forEach((storagedItem: records.Item, i: number) => {
       if (i !== idx) {
         expect(storagedItem)
           .toEqual(oldItems[i]);
@@ -111,29 +111,23 @@ describe('EDIT ITEM IN STORAGE: return old Map', () => {
           .toEqual(value);
       }
     });
-  };
+  }
 
   it('edit item: change gif', () => {
     const newValue = 'othergif';
-    expectEdit(function (item: records.Item): records.Item {
-      return item.set('gif', newValue);
-    });
+    expectEdit((item: records.Item) => item.setIn(['gif', 'src'], newValue));
   });
 
 
   it('Delete item', () => {
     const newValue = 'fakeId';
-    expectEdit(function (item: records.Item): records.Item {
-      return item.set('id', newValue);
-    });
+    expectEdit((item: records.Item) => item.set('id', newValue));
   });
 
 
   it('Save item', () => {
     const newValue = 'savedId';
-    expectEdit(function (item: records.Item): records.Item {
-      return item.set('id', newValue);
-    });
+    expectEdit((item: records.Item) => item.set('id', newValue));
   });
 });
 

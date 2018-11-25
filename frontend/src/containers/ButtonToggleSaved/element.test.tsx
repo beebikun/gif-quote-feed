@@ -2,7 +2,6 @@ import * as React from 'react';
 import { shallow } from 'enzyme';
 import Button, { CLASSNAMES } from './element';
 
-import FakeID from 'utils/FakeID';
 
 const KEY = 'STORAGE_KEY';
 const props = {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ShallowWrapper } from 'enzyme';
 import Connected from './index';
 import { actions as randomActions } from 'data/actions/random';
@@ -9,7 +8,7 @@ import { getConnectedWrapper, expectDispatchProps } from 'utils/testUtils/contai
 it('render without crashing', () => {
   const wrapper: ShallowWrapper = getConnectedWrapper(Connected);
   expectDispatchProps(wrapper.props(), {
-    fetchRandom: randomActions.fetchItems.request(),
-    fetchSaved: savedActions.fetchItems.request(),
+    fetchRandom: [randomActions.fetchItems.request()],
+    fetchSaved: [savedActions.fetchItems.request()],
   });
 });

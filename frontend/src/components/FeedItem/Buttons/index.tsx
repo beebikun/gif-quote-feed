@@ -14,6 +14,7 @@ export interface IProps {
 
 export default function Buttons({ storageKey, itemId }: IProps) {
   const isSaved = !FakeID.is(itemId);
+
   return (
     <div className='Item__btns'>
       <ButtonToggleSaved storageKey={ storageKey } isSaved={ isSaved } />

@@ -17,7 +17,7 @@ it('render without crashing', () => {
   expect(Redirect.prop('to')).toBe('/');
 
   // tslint:disable-next-line:no-any
-  function expectChild(path: string, mockedFetch: any): void {
+  function expectChild(path: string, mockedFetch: () => void): void {
     const r = Route.filterWhere((n): boolean => {
       return n.prop('path') === path;
     });

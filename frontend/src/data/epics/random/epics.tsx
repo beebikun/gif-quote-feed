@@ -1,10 +1,10 @@
 import { Epic } from 'redux-observable';
-
+import * as records from 'data/records';
 import { from, of, pipe } from 'rxjs';
 import { filter, switchMap, map, catchError } from 'rxjs/operators';
 import { isActionOf } from 'typesafe-actions';
 import { IStorageEntry } from 'data/reducers/utils';
-import { RootActions } from 'data/reducers';
+import { IAsyncAction, RootActions } from 'data/reducers';
 import { actions } from 'data/actions/random';
 
 export const fetchItemsFlow: Epic = (action$, store, { RandomApi }) => {
@@ -22,7 +22,7 @@ export const fetchItemsFlow: Epic = (action$, store, { RandomApi }) => {
 };
 
 export const fetchGifFlow: Epic = (action$, store, { RandomApi }) => {
-  const asyncActions = actions.fetchGif;
+  const asyncActions: IAsyncAction = actions.fetchGif;
   const filtered = filter(isActionOf(asyncActions.request));
   const mapped = ({ payload }: RootActions) => {
     const onSuccess = map(asyncActions.success);
@@ -34,7 +34,7 @@ export const fetchGifFlow: Epic = (action$, store, { RandomApi }) => {
     return from(fetch)
       .pipe(onSuccess, catchError(onError));
 
-    function gif2item(gif) {
+    function gif2item(gif: records.Gif): IStorageEntry {
       const item = store.value.items.get(payload);
 
       return [payload, item.set('gif', gif)];

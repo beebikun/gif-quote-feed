@@ -9,7 +9,7 @@ import { generateTestItems } from 'utils/testUtils';
 
 it('storageToItems', () => {
   const items: records.Item[] = generateTestItems(3);
-  let storage = Immutable.OrderedMap<records.Item>({
+  const storage = Immutable.OrderedMap<records.Item>({
     [StorageID.next()]: items[0],
     [StorageID.next()]: items[1],
     [StorageID.next()]: items[2],
@@ -39,10 +39,11 @@ it('storageFromItems', () => {
   expect(resultItems)
     .toEqual(items);
 
-  for (let key of storage.keys()) {
+  const keys: string[] = Array.from(storage.keys());
+  keys.forEach(key => {
     expect(StorageID.is(key))
       .toBe(true);
-  }
+  });
 });
 
 
@@ -52,7 +53,7 @@ it('replaceItem', () => {
   const storage = storageFromItems(items);
 
   const item = items[idx];
-  const key = storage.findKey((v: records.Item) => v.id === item.id);
+  const key = storage.findKey((v: records.Item) => v.id === item.id) as string;
   const value = item.set('id', 'newId').set('text', 'some other text');
 
   const replacedStorage = replaceItem(storage, [ key, value ]);

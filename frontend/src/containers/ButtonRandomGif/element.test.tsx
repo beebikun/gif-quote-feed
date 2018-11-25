@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as records from 'data/records';
 import { shallow } from 'enzyme';
 import Button from './element';
 

@@ -3,11 +3,13 @@ import { shallow } from 'enzyme';
 
 import * as records from 'data/records';
 import AsyncFeed from './element';
-import { IStorageEntry, storageFromItems } from 'data/reducers/utils';
+import { IStorageEntry } from 'data/reducers/utils';
 import { generateTestItems } from 'utils/testUtils';
 
-const ITEMS: IStorageEntry[] = generateTestItems(2)
-  .map((item: records.Item, i: number) => ['STORAGE_KEY_' + i, item]);
+const ITEMS: IStorageEntry[] = generateTestItems(2).map(item2entry);
+function item2entry(item: records.Item, i: number): IStorageEntry {
+  return ['STORAGE_KEY_' + i, item];
+}
 
 it('render without crashing', () => {
   const fetch = jest.fn();

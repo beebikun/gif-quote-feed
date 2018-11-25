@@ -1,8 +1,17 @@
-interface IDict {
-  [key: string]: string;
+import { IAsyncAction } from 'data/reducers/types';
+
+interface IProps {
+  // tslint:disable-next-line:no-any
+  REQUEST: any;
+  // tslint:disable-next-line:no-any
+  SUCCESS: any;
+  // tslint:disable-next-line:no-any
+  ERROR: any;
 }
-// tslint:disable-next-line:no-any
-export function expectAsyncActions(asyncAction: any, constants: IDict, payloads: IDict) {
+
+export function expectAsyncActions(asyncAction: IAsyncAction,
+                                   constants: IProps,
+                                   payloads: Partial<IProps>): void {
   const requestResult = asyncAction.request(payloads.REQUEST);
   expect(requestResult).toEqual({
     payload: payloads.REQUEST,

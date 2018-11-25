@@ -1,8 +1,7 @@
-/* tslint:disable:no-any */
-type IFiller =  (_: undefined, i: number) => any;
+type IFiller<T> = (_: undefined, i: number) => T;
 
-/* tslint:disable:no-any */
-export default function generateArray<T = any>(size: number, filler: IFiller): T[] {
+/* tslint:disable-next-line:no-any */
+export default function generateArray<T = any>(size: number, filler: IFiller<T>): T[] {
   return Array.from(Array(size))
     .map(filler);
 }

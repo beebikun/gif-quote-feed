@@ -1,5 +1,4 @@
 import { actions } from 'data/actions/random';
-import { ActionsObservable } from 'redux-observable';
 
 import * as records from 'data/records';
 import { IStorageEntry } from 'data/reducers/utils';

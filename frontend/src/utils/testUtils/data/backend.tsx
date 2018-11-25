@@ -10,7 +10,7 @@ export function getResponse(): IResponse {
 export const _COUNT = 5;
 export function getListReponse(): IResponse<IItemRaw[]> {
   const data = generateArray(_COUNT, (_, i) => {
-    return Object.freeze({ id: 'SAVED_' + i, gif: _GIF, text: 'text' })
+    return Object.freeze({ id: 'SAVED_' + i, gif: _GIF, text: 'text' });
   });
 
   return { data };

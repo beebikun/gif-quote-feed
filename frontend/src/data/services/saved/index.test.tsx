@@ -1,6 +1,6 @@
 import * as records from 'data/records';
 import api from './index';
-import backedApi, { IItemRaw } from './Backend';
+import backedApi from './Backend';
 import { FakeID } from 'utils';
 import { _ITEM as _BACKEND_ITEM } from 'utils/testUtils/data/backend';
 
@@ -38,7 +38,7 @@ describe('Item', () => {
   describe('Save', () => {
     const NEW_ID = 'savedId';
 
-    function callSave(item: records.Item, mustBeCalled: boolean): Promise<any> {
+    function callSave(item: records.Item, mustBeCalled: boolean): Promise<records.Item> {
       const backendMocked = getMockedBackendMethod('create', { ..._BACKEND_ITEM, id: NEW_ID });
 
       return api.saveItem(item)
@@ -74,7 +74,7 @@ describe('Item', () => {
   });
 
   describe('Delete', () => {
-    function callDelete(item: records.Item, mustBeCalled: boolean): Promise<any> {
+    function callDelete(item: records.Item, mustBeCalled: boolean): Promise<records.Item> {
       const backendMocked = getMockedBackendMethod('delete', undefined);
 
       return api.deleteItem(item)
@@ -123,11 +123,10 @@ describe('Item', () => {
 });
 
 type BackendMethods = keyof typeof backedApi;
-/* tslint:disable:no-any */
+/* tslint:disable-next-line:no-any */
 function getMockedBackendMethod(method: BackendMethods, resolve: any) {
   const backendMocked = jest.spyOn(backedApi, method);
-  /* tslint:disable:no-any */
-  backendMocked.mockImplementationOnce((): Promise<any> => Promise.resolve(resolve));
+  backendMocked.mockReturnValueOnce(Promise.resolve(resolve));
   backendMocked.mockClear();
 
   return backendMocked;

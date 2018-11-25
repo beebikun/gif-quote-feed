@@ -21,7 +21,7 @@ export function storageFromItems(items: records.Item[]): IStorage {
 }
 
 export type IStorageKey = string;
-export type IStorageEntry = [key: IStorageKey, value: records.Item];
+export type IStorageEntry = [IStorageKey, records.Item];
 export function storageToItems(storage: IStorage): IStorageEntry[] {
   return storage.toArray();
 }

@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { ShallowWrapper } from 'enzyme';
 
 import Connected from './index';
+import { IProps } from './element';
 import { IStorageEntry, storageFromItems } from 'data/reducers/utils';
-import * as records from 'data/records';
 import { generateTestItems } from 'utils/testUtils';
 import { getConnectedWrapper } from 'utils/testUtils/containers';
 
@@ -13,8 +12,7 @@ it('render without crashing', () => {
   const ownProps = { fetch: jest.fn() };
   const wrapper: ShallowWrapper = getConnectedWrapper(Connected, { props: ownProps, initialState });
 
-  // tslint:disable-next-line:no-any
-  const items: IStorageEntry[] = (wrapper.props() as any).items;
+  const items: IStorageEntry[] = (wrapper.props() as IProps).items;
   expect(items.map(i => i[1]))
     .toEqual(storageItems);
 });

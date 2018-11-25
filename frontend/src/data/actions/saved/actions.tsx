@@ -30,3 +30,4 @@ export default {
   fetchItems: fetchItemsAsync<void, records.Item[], Error>(),
   saveItem: saveItemAsync<IStorageKey, IStorageEntry, Error>(),
 };
+

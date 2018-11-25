@@ -1,27 +1,25 @@
 import { ReactWrapper } from 'enzyme';
 import { IStorageEntry } from 'data/reducers/utils';
-import App from 'components';
 import store from 'data/storage';
-// // import Item from 'api/records/Item';
 import { COUNT as RANDOM_ITEMS_COUNT } from 'data/services/random/Andruxnet';
 import { _COUNT as SAVED_ITEMS_COUNT } from 'utils/testUtils/data/backend';
 import { FakeID } from 'utils';
 import { renderTestSequence, IStepFunction, IStepFunctionProps } from './router';
 
 
-function expectApp(initialPath: string, isRandom: boolean, steps: IStepFunction[], count: number): Promise<any> {
+function expectApp(initialPath: string, isRandom: boolean, steps: IStepFunction[], count: number): Promise<void> {
   return new Promise(resolve => {
-    const _steps = [ expectCallFetch, expectLoadItems ].concat(steps.slice(1));
+    const renderSteps = [ expectCallFetch, expectLoadItems ].concat(steps.slice(1));
     const firstStep = steps[0] || Function.prototype;
-    const lastStep = _steps[_steps.length - 1];
-    _steps[_steps.length - 1] = function(props: IStepFunctionProps) {
+    const lastStep = renderSteps[renderSteps.length - 1];
+    renderSteps[renderSteps.length - 1] = (props: IStepFunctionProps) => {
       lastStep(props);
       resolve();
-    }
+    };
 
-    renderTestSequence(App, {
+    renderTestSequence({
       initialPath,
-      steps: _steps,
+      steps: renderSteps,
     });
 
     function expectCallFetch({ wrapper }: IStepFunctionProps): void {
@@ -40,15 +38,15 @@ function expectApp(initialPath: string, isRandom: boolean, steps: IStepFunction[
 
       const Feed = wrapper.find('AsyncFeed');
       expect(Feed).toHaveLength(1);
-      const items = Feed.prop('items');
+      const items: IStorageEntry[] = Feed.prop('items');
 
       expect(items.length).toBe(count);
 
       if (isRandom) {
-        expect(items.every(([key, item]) => FakeID.is(item.id) === true))
+        expect(items.every(([key, item]: IStorageEntry) => FakeID.is(item.id) === true))
           .toBe(true);
       } else {
-        expect(items.some(([key, item]) => FakeID.is(item.id) === true))
+        expect(items.some(([key, item]: IStorageEntry) => FakeID.is(item.id) === true))
           .toBe(false);
       }
 
@@ -56,22 +54,22 @@ function expectApp(initialPath: string, isRandom: boolean, steps: IStepFunction[
       expect(FeedItem).toHaveLength(count);
 
       const Text = wrapper.find('Text');
-      expect(FeedItem).toHaveLength(count);
+      expect(Text).toHaveLength(count);
 
       const Img = wrapper.find('Img');
-      expect(FeedItem).toHaveLength(count);
+      expect(Img).toHaveLength(count);
 
       // random feed has RandomGif buttons, but Saved Feed - hasnt
-      const ButtonRandomGif = wrapper.find('ButtonRandomGif')
-      expect(ButtonRandomGif).toHaveLength(isRandom ? count: 0);
+      const ButtonRandomGif = wrapper.find('ButtonRandomGif');
+      expect(ButtonRandomGif).toHaveLength(isRandom ? count : 0);
 
       const SaveButton = wrapper.find('ButtonAdd')
         .filterWhere(n => n.prop('isSaved') === false);
-      expect(SaveButton).toHaveLength(isRandom ? count: 0);
+      expect(SaveButton).toHaveLength(isRandom ? count : 0);
 
       const DeleteButton = wrapper.find('ButtonAdd')
         .filterWhere(n => n.prop('isSaved') === true);
-      expect(DeleteButton).toHaveLength(isRandom ? 0: count);
+      expect(DeleteButton).toHaveLength(isRandom ? 0 : count);
 
       firstStep(props);
     }
@@ -80,16 +78,15 @@ function expectApp(initialPath: string, isRandom: boolean, steps: IStepFunction[
 
 
 it('Open random', () => {
-  let _firstEntry;
-  let _gifSrc;
+  let firstEntry: IStorageEntry;
   const initialPath = '/';
   const steps = [ updateGif, expectGifUpdated, expectSave];
 
   return expectApp(initialPath, true, steps, RANDOM_ITEMS_COUNT);
 
   function updateGif({ wrapper }: IStepFunctionProps): void {
-    _firstEntry = store.getState().items.toArray()[0];
-    const [oldKey, oldItem] = _firstEntry;
+    firstEntry = store.getState().items.toArray()[0];
+    const oldItem = firstEntry[1];
     expect(FakeID.is(oldItem.id))
       .toBe(true);
 
@@ -100,9 +97,8 @@ it('Open random', () => {
   }
 
   function expectGifUpdated(props: IStepFunctionProps): void {
-    const { wrapper } = props;
     const [newKey, newItem] = store.getState().items.toArray()[0];
-    const [oldKey, oldItem] = _firstEntry;
+    const [oldKey, oldItem] = firstEntry;
 
     expect(newKey)
       .toEqual(oldKey);
@@ -111,9 +107,7 @@ it('Open random', () => {
     expect(newItem.gif.src)
       .not.toEqual(oldItem.gif.src);
 
-    _gifSrc = newItem.gif.src;
-
-    _firstEntry[1] = newItem;
+    firstEntry[1] = newItem;
 
     saveItem(props);
   }
@@ -127,19 +121,19 @@ it('Open random', () => {
   }
 
   function expectSave({ wrapper }: IStepFunctionProps): void {
-    expectToggleSave(wrapper, false, _firstEntry);
+    expectToggleSave(wrapper, false, firstEntry);
   }
 });
 
 it('open saved', () => {
-  let _firstEntry;
+  let firstEntry: IStorageEntry;
   const initialPath = '/saved';
   const steps = [ removeItem, expectRemove ];
 
   return expectApp(initialPath, false, steps, SAVED_ITEMS_COUNT);
 
   function removeItem({ wrapper }: IStepFunctionProps): void {
-    _firstEntry = store.getState().items.toArray()[0];
+    firstEntry = store.getState().items.toArray()[0];
     const DeleteButton = wrapper
       .find('ButtonAdd')
       .filterWhere(n => n.prop('isSaved') === true)
@@ -148,7 +142,7 @@ it('open saved', () => {
   }
 
   function expectRemove({ wrapper }: IStepFunctionProps): void {
-    expectToggleSave(wrapper, true, _firstEntry);
+    expectToggleSave(wrapper, true, firstEntry);
   }
 });
 

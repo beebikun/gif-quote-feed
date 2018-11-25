@@ -2,7 +2,8 @@ import api, { IItemRaw } from './index';
 
 import * as records from 'data/records';
 
-import { expectCall, clearMethod } from '__mocks__/axios-utils';
+// import { expectCall, clearMethod } from '__mocks__/axios-utils';
+import { clearMethod } from '__mocks__/axios-utils';
 import { _ITEM } from 'utils/testUtils/data/backend';
 
 const expectedItem = expect.objectContaining({

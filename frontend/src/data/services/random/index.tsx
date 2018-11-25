@@ -21,7 +21,7 @@ class Api {
     return axios.all<IPromise>(promises)
       .then(spreadResult);
 
-    /* tslint:disable:no-any */
+    /* tslint:disable-next-line:no-any */
     function spreadResult(results: any[]): records.Item[] {
       const quotes = results[0] as string[];
       const gifs = results.slice(1) as records.Gif[];

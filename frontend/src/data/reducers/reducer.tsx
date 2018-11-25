@@ -2,13 +2,11 @@ import * as records from 'data/records';
 import * as random from 'data/actions/random';
 import * as saved from 'data/actions/saved';
 
-// import { Action } from 'redux';
-// TODO: fix RootActions
-// export type RootActions = { type: string, payload?: records.Item[] };
-import { storageFromItems, replaceItem } from './utils';
-const initialState = storageFromItems([]);
-// tslint:disable-next-line:no-any
-export type RootActions = any;
+import { storageFromItems, replaceItem, IStorage, IStorageEntry } from './utils';
+import { RootActions } from './types';
+
+const initialState: IStorage = storageFromItems([]);
+
 export default function Reducer(state = initialState, action: RootActions) {
   switch (action.type) {
     case random.CONSTANTS.FETCH_ITEMS.SUCCESS:
@@ -20,7 +18,7 @@ export default function Reducer(state = initialState, action: RootActions) {
     case saved.CONSTANTS.SAVE_ITEM.SUCCESS:
     case saved.CONSTANTS.DELETE_ITEM.SUCCESS:
     case random.CONSTANTS.FETCH_GIF.SUCCESS:
-      const item: records.Item = action!.payload;
+      const item: IStorageEntry = action!.payload;
 
       return replaceItem(state, item);
 

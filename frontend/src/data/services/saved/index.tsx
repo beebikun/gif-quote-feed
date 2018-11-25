@@ -1,6 +1,5 @@
 import * as records from 'data/records';
 import backendApi, { IItemRaw, IUnsavedItem } from './Backend';
-import { records.Item } from 'data/reducers/utils';
 
 class Api {
   public list(): Promise<records.Item[]> {

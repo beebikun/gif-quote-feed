@@ -9,15 +9,13 @@ const fetchItemsAsync = createAsyncAction(
   CONSTANTS.FETCH_ITEMS.ERROR,
 );
 
-
 const fetchGifAsync = createAsyncAction(
   CONSTANTS.FETCH_GIF.REQUEST,
   CONSTANTS.FETCH_GIF.SUCCESS,
   CONSTANTS.FETCH_GIF.ERROR,
 );
 
-
 export default {
-  fetchItems: fetchItemsAsync<void, records.Item[], Error>(),
   fetchGif: fetchGifAsync<IStorageKey, IStorageEntry, Error>(),
+  fetchItems: fetchItemsAsync<void, records.Item[], Error>(),
 };

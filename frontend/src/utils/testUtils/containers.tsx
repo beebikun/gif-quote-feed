@@ -1,6 +1,7 @@
 import * as React from 'react';
 import configureStore from 'redux-mock-store';
 import { shallow, ShallowWrapper } from 'enzyme';
+import { IAction } from 'data/reducers/types';
 
 interface IConnectedWrapperParams {
   // tslint:disable-next-line:no-any
@@ -22,14 +23,21 @@ export function getConnectedWrapper(Connected: any, params?: IConnectedWrapperPa
 
 interface IDispatchProps {
   // tslint:disable-next-line:no-any
-  [dispatchName: string]: any;
+  [dispatchName: string]: (...args: any[]) => IAction;
 }
-export function expectDispatchProps(props: IDispatchProps, expected: IDispatchProps): void {
+interface IDispatchExpected {
+  // tslint:disable-next-line:no-any
+  [dispatchName: string]: [IAction, any?];
+}
+export function expectDispatchProps(props: IDispatchProps,
+                                    expected: IDispatchExpected): void {
   Object.keys(expected)
     .forEach((dispatchName: string) => {
-      const request = props[dispatchName];
-      expect(request).toBeDefined();
-      expect(request).toBeInstanceOf(Function);
-      expect(request()).toEqual(expected[dispatchName]);
+      const dispatch = props[dispatchName];
+      expect(dispatch).toBeInstanceOf(Function);
+
+      const [ expectedAction, ...args ] = expected[dispatchName];
+      const action = dispatch(...args);
+      expect(action).toEqual(expectedAction);
     });
 }

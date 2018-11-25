@@ -1,61 +1,60 @@
+/* tslint:disable:max-classes-per-file */
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { withRouter, Route, MemoryRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, Route, MemoryRouter, RouteComponentProps } from 'react-router-dom';
 import { mount, ReactWrapper } from 'enzyme';
 import { Provider } from 'react-redux';
 import { connect } from 'react-redux';
 import { RootState } from 'data/reducers';
 import store from 'data/storage';
+import App from 'components';
 
 export interface IAssertProps extends RouteComponentProps {
+  children?: React.ReactNode;
 }
 
-export interface IStepFunctionProps extends RouteComponentProps {
-  wrapper: ReactWrapper,
+export interface IStepFunctionProps extends IAssertProps {
+  wrapper: ReactWrapper;
 }
 
-export interface IStepFunction {
-  (props: IStepFunctionProps): void
-}
+export type IStepFunction = (props: IStepFunctionProps) => void;
 
-export type TSybject = | React.Component | React.StatelessComponent;
 
 export interface ISequenceProps {
   initialPath: string;
-  steps: Array<IStepFunction>;
-};
+  steps: IStepFunction[];
+}
 
-export function renderTestSequence(Subject: TSybject, {
-  initialPath='/',
-  steps=[],
+export function renderTestSequence({
+  initialPath = '/',
+  steps = [],
 }: ISequenceProps) {
-  let wrapper;
+  let wrapper: ReactWrapper;
   const renderPromise = Promise.resolve();
   renderPromise.then(() => {
     wrapper = mount(<Test />);
   });
 
   class Assert extends React.Component<IAssertProps, {}>  {
-    componentDidMount() {
+    public componentDidMount() {
       this.assert();
     }
 
-    componentDidUpdate() {
+    public componentDidUpdate() {
       this.assert();
     }
 
-    assert() {
+    public assert() {
       const nextStep: IStepFunction | undefined = steps.shift();
       if (nextStep) {
         renderPromise.then(() => {
-          nextStep({ ...this.props, wrapper: wrapper.update() });
+          nextStep({ ...this.props, wrapper: wrapper.update() as ReactWrapper });
         });
       }
     }
 
-    render() {
+    public render() {
       return (
-        <Subject />
+        <App />
       );
     }
   }
@@ -68,7 +67,7 @@ export function renderTestSequence(Subject: TSybject, {
   const ConnectedAssert = connector(Assert);
 
   class Test extends React.Component {
-    render() {
+    public render() {
       return (
         <Provider store={ store }>
           <MemoryRouter initialEntries={ [initialPath] } >

@@ -2,10 +2,8 @@ import getRandomColor, { size } from './index';
 
 it('get color', () => {
   const color = getRandomColor();
-  expect(/^#[0-9A-F]{6}/.test(color))
-    .toBe(true);
+  expect(color).toMatch(/^#[0-9A-F]{6}/);
 });
-
 
 it('not allow two the same color in a row', () => {
   let lastColor = '';

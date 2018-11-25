@@ -8,8 +8,7 @@ it('render without crashing', () => {
   const wrapper = shallow(<Background > <div id='inner' /> </Background>);
   expect(wrapper.find('#inner')).toHaveLength(1);
 
-  const bg = wrapper.get(0).props.style.backgroundColor;
-  expect(/^#[0-9A-F]{6}/.test(bg))
-    .toBe(true);
+  const color = wrapper.get(0).props.style.backgroundColor;
+  expect(color).toMatch(/^#[0-9A-F]{6}/);
 });
 

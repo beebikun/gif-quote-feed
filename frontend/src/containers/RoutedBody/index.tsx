@@ -1,7 +1,7 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import { RootActions } from 'data/reducers';
+import { RootActions, RootState } from 'data/reducers';
 import { actions as randomActions } from 'data/actions/random';
 import { actions as savedActions } from 'data/actions/saved';
 import RoutedBody from './element';
@@ -9,6 +9,12 @@ import RoutedBody from './element';
 
 const fetchRandom = randomActions.fetchItems;
 const fetchSaved = savedActions.fetchItems;
+
+function mapStateToProps(state: RootState) {
+  return {
+    location: state.router.location,
+  };
+}
 
 
 function mapDispatchToProps(dispatch: Dispatch<RootActions>) {
@@ -18,5 +24,5 @@ function mapDispatchToProps(dispatch: Dispatch<RootActions>) {
   }, dispatch);
 }
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 export default connector(RoutedBody);

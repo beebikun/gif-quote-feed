@@ -3,10 +3,12 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 
 import { RootActions } from 'data/reducers';
 import AsyncFeed from 'containers/AsyncFeed';
+import { Location } from 'history';
 
 export interface IProps {
   fetchRandom: () => RootActions;
   fetchSaved: () => RootActions;
+  location: Location;
 }
 
 export default function RoutedBody({ fetchRandom, fetchSaved }: IProps) {

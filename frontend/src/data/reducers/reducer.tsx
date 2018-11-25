@@ -6,7 +6,6 @@ import { storageFromItems, replaceItem, IStorage, IStorageEntry } from './utils'
 import { RootActions } from './types';
 
 const initialState: IStorage = storageFromItems([]);
-
 export default function Reducer(state = initialState, action: RootActions) {
   switch (action.type) {
     case random.CONSTANTS.FETCH_ITEMS.SUCCESS:

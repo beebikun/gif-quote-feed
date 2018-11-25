@@ -6,7 +6,10 @@ import { actions as savedActions } from 'data/actions/saved';
 import { getConnectedWrapper, expectDispatchProps } from 'utils/testUtils/containers';
 
 it('render without crashing', () => {
-  const wrapper: ShallowWrapper = getConnectedWrapper(Connected);
+  const initialState = {
+    router: { location: {} },
+  };
+  const wrapper: ShallowWrapper = getConnectedWrapper(Connected, { initialState });
   expectDispatchProps(wrapper.props(), {
     fetchRandom: [randomActions.fetchItems.request()],
     fetchSaved: [savedActions.fetchItems.request()],

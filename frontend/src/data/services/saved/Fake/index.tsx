@@ -1,8 +1,10 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 import * as records from 'data/records';
 
-import { API_URL } from './secrets';
+// import { API_URL } from './secrets';
+
+import { getListReponse } from 'utils/testUtils/data/backend';
 
 export interface IUnsavedItem {
   gif: records.Gif;
@@ -20,23 +22,21 @@ export interface IResponse<T= IItemRaw> {
 
 class Api {
   public list(): Promise<IItemRaw[]> {
-    return axios.get(API_URL)
-      .then(({ data }: IResponse<IItemRaw[]>) => data);
+    const items: IItemRaw[] = getListReponse().data;
+
+    return  Promise.resolve(items);
   }
 
   public create(item: IUnsavedItem): Promise<IItemRaw> {
-    return axios.post(API_URL, item)
-      .then(({ data }: IResponse) => data);
+    return Promise.resolve({ ...item, id: 'notFake' + (item as IItemRaw).id } as IItemRaw);
   }
 
   public edit(id: string, item: records.Item): Promise<IItemRaw> {
-    return axios.put(`${ API_URL }/${ id }`, item)
-      .then(({ data }: IResponse) => data);
+    return Promise.resolve({ ...item.toObject() } as IItemRaw);
   }
 
   public delete(id: string): Promise<void> {
-    return axios.delete(`${ API_URL }/${ id }`)
-      .then(({ data }: IResponse) => undefined);
+    return Promise.resolve();
   }
 }
 

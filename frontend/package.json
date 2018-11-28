@@ -26,7 +26,7 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test-watch": "react-scripts-ts test --env=jsdom",
-    "test": "npm run test-watch -- --coverage --collectCoverageFrom='[\"**/*.tsx\", \"!**/__test__/*\", \"!src/index.tsx\", \"!**/secrets.*\"]'",
+    "test": "npm run test-watch -- --coverage --collectCoverageFrom='[\"**/*.tsx\", \"!**/__test__/*\", \"!src/utils/testUtils/*\", \"!src/index.tsx\", \"!**/secrets.*\"]'",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {

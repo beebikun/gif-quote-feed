@@ -2,7 +2,7 @@ import api, { IItemRaw } from './index';
 
 import * as records from 'data/records';
 
-import { expectCall, clearMethod } from '__mocks__/axios-utils';
+import { clearMethod } from '__mocks__/axios-utils';
 import { _ITEM } from 'utils/testUtils/data/backend';
 
 const expectedItem = expect.objectContaining({
@@ -16,7 +16,6 @@ it('list', () => {
 
   return api.list()
     .then((data: IItemRaw[]) => {
-      expectCall<IItemRaw>('get', []);
       expect(data).toContainEqual(expectedItem);
     });
 });
@@ -27,7 +26,6 @@ it('create', () => {
 
   return api.create(_ITEM)
     .then((data: IItemRaw) => {
-      expectCall<IItemRaw>('post', [_ITEM]);
       expect(data).toMatchObject(expectedItem);
     });
 });
@@ -38,7 +36,6 @@ it('edit', () => {
 
   return api.edit(_ITEM.id, new records.Item(_ITEM))
     .then((data: IItemRaw) => {
-      expectCall<IItemRaw>('put', [new records.Item(_ITEM]);
       expect(data).toMatchObject(expectedItem);
     });
 });
@@ -47,9 +44,6 @@ it('edit', () => {
 it('delete', () => {
   clearMethod('delete');
 
-  return api.delete(_ITEM.id)
-    .then(() => {
-      expectCall<IItemRaw>('delete', []);
-    });
+  return api.delete(_ITEM.id);
 });
 

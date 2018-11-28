@@ -9,7 +9,6 @@ const API_KEY = 'onAjInPSKymshNzgMRBkYmyEamZep11hZqhjsnRVS8YhEfXaX7';
 export interface IQuote {
   readonly author: string;
   readonly quote: string;
-  // category: string;
 }
 
 export interface IResponse {
@@ -21,6 +20,7 @@ class API {
     return axios.get(URL, {
       headers: {
         'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Mashape-Key': API_KEY,
       }

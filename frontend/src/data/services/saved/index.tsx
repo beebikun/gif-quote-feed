@@ -5,9 +5,11 @@ import backendApi, { IItemRaw, IUnsavedItem } from './Backend';
 class Api {
   public list(): Promise<records.Item[]> {
     return backendApi.list()
-      .then((data: IItemRaw[]) => {
-        return data.map(d => new records.Item(d));
-      });
+      .then((data: IItemRaw[]) => data.map(createItem));
+
+    function createItem(d: IItemRaw): records.Item {
+      return new records.Item({ ...d, gif: new records.Gif(d.gif) });
+    }
   }
 
   /* ------------------------------------------- */

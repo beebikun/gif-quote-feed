@@ -19,7 +19,7 @@ export async function list(req: Request, res: Response) {
   }
 
   function onError(error: Error): void {
-    logger.error(error.toString());
+    logger.error(error && error.toString());
     res.status(500).send(error);
   }
 }
@@ -45,7 +45,7 @@ export function create({ body }: Request, res: Response) {
       // tslint:disable-next-line:no-any
       (error as any)._message = 'Validation failed';
     }
-    logger.error(error.toString());
+    logger.error(error && error.toString());
     res.status(500).send(error);
   }
 }
@@ -76,7 +76,7 @@ export function detail({ params }: IDetailRequest, res: Response) {
   }
 
   function onError(error: Error): void {
-    logger.error(error.toString());
+    logger.error(error && error.toString());
     res.status(500).send(error);
   }
 }
@@ -101,7 +101,7 @@ export function update({ params, body }: IDetailRequest, res: Response) {
   }
 
   function onError(error: Error): void {
-    logger.error(error.toString());
+    logger.error(error && error.toString());
     if (error.name === 'ObjectParameterError') {
       error.name = 'ValidationError';
     }
@@ -132,7 +132,7 @@ export function remove({ params }: IDetailRequest, res: Response) {
   }
 
   function onError(error: Error): void {
-    logger.error(error.toString());
+    logger.error(error && error.toString());
     res.status(500).send(error);
   }
 }

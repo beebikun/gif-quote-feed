@@ -1,8 +1,5 @@
-// import axios from 'axios';
-
 import * as records from 'data/records';
 
-// import { API_URL } from './secrets';
 
 import { getListReponse } from 'utils/testUtils/data/backend';
 

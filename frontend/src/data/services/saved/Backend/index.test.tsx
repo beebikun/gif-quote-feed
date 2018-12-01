@@ -33,17 +33,6 @@ it('create', () => {
 });
 
 
-it('edit', () => {
-  clearMethod('put');
-
-  return api.edit(_ITEM.id, new records.Item(_ITEM))
-    .then((data: IItemRaw) => {
-      expectCall<IItemRaw>('put', [new records.Item(_ITEM]);
-      expect(data).toMatchObject(expectedItem);
-    });
-});
-
-
 it('delete', () => {
   clearMethod('delete');
 

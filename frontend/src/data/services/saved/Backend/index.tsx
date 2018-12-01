@@ -29,11 +29,6 @@ class Api {
       .then(({ data }: IResponse) => data);
   }
 
-  public edit(id: string, item: records.Item): Promise<IItemRaw> {
-    return axios.put(`${ API_URL }/${ id }`, item)
-      .then(({ data }: IResponse) => data);
-  }
-
   public delete(id: string): Promise<void> {
     return axios.delete(`${ API_URL }/${ id }`)
       .then(({ data }: IResponse) => undefined);

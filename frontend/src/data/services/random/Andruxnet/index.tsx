@@ -20,7 +20,6 @@ class API {
     return axios.get(URL, {
       headers: {
         'Accept': 'application/json',
-        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Mashape-Key': API_KEY,
       }

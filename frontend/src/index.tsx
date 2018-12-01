@@ -9,8 +9,6 @@ import store, { history } from './data/storage';
 import App from './components';
 import registerServiceWorker from './registerServiceWorker';
 
-import * as dotenv from 'dotenv';
-dotenv.config({ path: '.env' });
 
 const RoutedApp = () => (
   <ConnectedRouter history={ history }>

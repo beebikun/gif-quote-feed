@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/history": "^4.7.2",
     "axios": "^0.18.0",
     "connected-react-router": "^5.0.1",
     "history": "^4.7.2",
@@ -30,9 +29,9 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "@types/dotenv": "^6.1.0",
     "@types/enzyme": "^3.1.15",
     "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/history": "^4.7.2",
     "@types/jest": "^23.3.9",
     "@types/node": "^10.12.5",
     "@types/react": "^16.7.2",

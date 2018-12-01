@@ -1,4 +1,0 @@
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"a":"A","title":"B"}' \
-  http://localhost:8000/api/v1/books

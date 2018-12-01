@@ -30,7 +30,7 @@ class Api {
   }
 
   public delete(id: string): Promise<void> {
-    return axios.delete(`${ API_URL }/${ id }`)
+    return axios.delete(`${ API_URL }${ id }`)
       .then(({ data }: IResponse) => undefined);
   }
 }

@@ -2,7 +2,6 @@ import { Store, createStore, applyMiddleware } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
 import { History } from 'history';
 import { routerMiddleware as createRouterMiddleware } from 'connected-react-router';
-import { composeWithDevTools } from 'redux-devtools-extension';
 
 import createRootReducer, { RootState, RootActions } from '../reducers';
 import rootEpic from '../epics';
@@ -13,8 +12,6 @@ export default function configureStore(history: History,
   const epicMiddleware = createEpicMiddleware({dependencies : services});
   const routerMiddleware = createRouterMiddleware(history);
 
-  // create the composing function for our middlewares
-  const composeEnhancers = composeWithDevTools({});
   // configure middlewares
   const middlewares = applyMiddleware(
     epicMiddleware,
@@ -27,7 +24,7 @@ export default function configureStore(history: History,
   const store = createStore(
     rootReducer,
     initialState!,
-    composeEnhancers(middlewares),
+    middlewares,
   );
   epicMiddleware.run(rootEpic);
 

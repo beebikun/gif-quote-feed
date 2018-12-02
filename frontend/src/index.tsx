@@ -9,6 +9,9 @@ import store, { history } from './data/storage';
 import App from './components';
 import registerServiceWorker from './registerServiceWorker';
 
+import { enableLogger } from './data/reducers';
+enableLogger();
+
 
 const RoutedApp = () => (
   <ConnectedRouter history={ history }>

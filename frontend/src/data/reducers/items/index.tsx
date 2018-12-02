@@ -2,8 +2,8 @@ import * as records from 'data/records';
 import * as random from 'data/actions/random';
 import * as saved from 'data/actions/saved';
 
-import { storageFromItems, replaceItem, IStorage, IStorageEntry } from './utils';
-import { RootActions } from './types';
+import { storageFromItems, replaceItem, IStorage, IStorageEntry } from '../utils';
+import { RootActions } from '../types';
 
 const initialState: IStorage = storageFromItems([]);
 export default function Reducer(state = initialState, action: RootActions) {

@@ -1,11 +1,11 @@
 import * as Immutable from 'immutable';
 import * as records from 'data/records';
 import { StorageID } from 'utils';
+import { generateTestItems } from 'utils/testUtils';
 import {
   storageToItems, storageFromItems, replaceItem,
   IStorageEntry, IStorage,
-} from './utils';
-import { generateTestItems } from 'utils/testUtils';
+} from './index';
 
 it('storageToItems', () => {
   const items: records.Item[] = generateTestItems(3);

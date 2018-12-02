@@ -6,11 +6,11 @@ import { CONSTANTS as SAVED_CONSTANTS } from 'data/actions/saved';
 import * as records from 'data/records';
 import { generateTestItems } from 'utils/testUtils';
 
-import reducer from './reducer';
-import { RootActions } from './types';
+import reducer from './index';
+import { RootActions } from '../types';
 import {
   storageFromItems, storageToItems, IStorage,
-} from './utils';
+} from '../utils';
 
 function storageItemsArray(storage: IStorage): records.Item[] {
   return storageToItems(storage)

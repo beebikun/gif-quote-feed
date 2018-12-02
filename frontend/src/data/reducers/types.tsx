@@ -10,12 +10,12 @@ export interface IAsyncAction<A = (payload: any) => IAction> {
   failure: A;
 }
 import { RouterState } from 'connected-react-router';
-// import { Reducer } from 'redux';
 import { IStorage } from './utils';
 
 interface IState {
   items: IStorage;
   router: RouterState;
+  zlogger: boolean;
 }
 
 export type RootState = IState;

@@ -8,8 +8,6 @@ import createRootReducer, { RootState, RootActions } from '../reducers';
 import rootEpic from '../epics';
 import services from '../services';
 
-
-// tslint:disable-next-line:no-any
 export default function configureStore(history: History,
                                        initialState?: RootState): Store<RootState, RootActions> {
   const epicMiddleware = createEpicMiddleware({dependencies : services});

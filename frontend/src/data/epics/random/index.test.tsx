@@ -1,31 +1,19 @@
-import { actions } from 'data/actions/random';
-
 import * as records from 'data/records';
-import { IStorageEntry } from 'data/reducers/utils';
-import { generateTestItems, getTestItem } from 'utils/testUtils';
-
 import * as epics from './epics';
-import { expectFlow } from 'utils/testUtils/epics';
+import { actions } from 'data/actions/random';
+import { expectEditFlow, expectFetchItemsFlow } from 'utils/testUtils/epics';
+import { getTestItem } from 'utils/testUtils';
 
 const API_NAME = 'RandomApi';
-const KEY = 'STORAGE_KEY';
 
 describe('fetchItems', () => {
-  const items: records.Item[] = generateTestItems(2);
-  expectFlow(actions.fetchItems, epics.fetchItemsFlow,
-    { name: API_NAME, method: 'list' }, {
-    success: items,
-  });
+  expectFetchItemsFlow(API_NAME, epics.fetchItemsFlow, actions.fetchItems);
 });
-
 
 describe('fetchGif', () => {
   const item: records.Item = getTestItem();
-  const entry: IStorageEntry = [KEY, item];
-  expectFlow(actions.fetchGif, epics.fetchGifFlow,
-    { name: API_NAME, method: 'randomGif' }, {
-    request: KEY,
-    success: entry,
-    successApi: item.gif,
-  }, { [ KEY ]: item });
+  const successApi = item.gif;
+  const apiParams = { name: API_NAME, method: 'randomGif' };
+  expectEditFlow(item, apiParams, epics.fetchGifFlow, actions.fetchGif,
+                 successApi);
 });

@@ -1,41 +1,31 @@
-import { actions } from 'data/actions/saved';
 import * as records from 'data/records';
-
 import * as epics from './epics';
-import { IStorageEntry } from 'data/reducers/utils';
-import { generateTestItems, getTestItem } from 'utils/testUtils';
-import { expectFlow } from 'utils/testUtils/epics';
+import { actions } from 'data/actions/saved';
+import { getTestItem } from 'utils/testUtils';
+import { expectEditFlow, expectFetchItemsFlow } from 'utils/testUtils/epics';
 
 const API_NAME = 'SavedApi';
-const KEY = 'STORAGE_KEY';
 
-describe('fetchItems', () => {
-  const items: records.Item[] = generateTestItems(2);
-  expectFlow(actions.fetchItems, epics.fetchItemsFlow,
-    { name: API_NAME, method: 'list' }, {
-    success: items,
-  });
+
+describe.only('fetchItems', () => {
+  expectFetchItemsFlow(API_NAME, epics.fetchItemsFlow, actions.fetchItems);
 });
 
 
 describe('saveItem', () => {
   const item: records.Item = getTestItem();
-  const entry: IStorageEntry = [KEY, item];
-  expectFlow(actions.saveItem, epics.saveItemFlow,
-    { name: API_NAME, method: 'saveItem', params: [item] }, {
-    request: KEY,
-    success: entry,
-    successApi: item,
-  }, { [ KEY ]: item });
+  const successApi = item;
+  const apiCallParams = [item];
+  const apiParams = { name: API_NAME, method: 'saveItem' };
+  expectEditFlow(item, apiParams, epics.saveItemFlow, actions.saveItem,
+                 successApi, apiCallParams);
 });
 
 describe('deleteItem', () => {
   const item: records.Item = getTestItem();
-  const entry: IStorageEntry = [KEY, item];
-  expectFlow(actions.deleteItem, epics.deleteItemFlow,
-    { name: API_NAME, method: 'deleteItem', params: [item] }, {
-    request: KEY,
-    success: entry,
-    successApi: item,
-  }, { [ KEY ]: item });
+  const successApi = item;
+  const apiCallParams = [item];
+  const apiParams = { name: API_NAME, method: 'deleteItem' };
+  expectEditFlow(item, apiParams, epics.deleteItemFlow, actions.deleteItem,
+                 successApi, apiCallParams);
 });

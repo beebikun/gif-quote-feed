@@ -1,48 +1,21 @@
 import { Epic } from 'redux-observable';
-
-import { from, of, pipe } from 'rxjs';
-import { filter, switchMap, map, catchError } from 'rxjs/operators';
-import { isActionOf } from 'typesafe-actions';
-import { IAsyncAction, RootActions } from 'data/reducers';
-import { IStorageEntry } from 'data/reducers/utils';
 import { actions } from 'data/actions/saved';
 import * as records from 'data/records';
 
-export const fetchItemsFlow: Epic = (action$, store, { SavedApi }) => {
-  const asyncAction = actions.fetchItems;
-  const filtered = filter(isActionOf(asyncAction.request));
-  const mapped = () => {
-    const onSuccess = map(asyncAction.success);
-    const onError = catchError(pipe(asyncAction.failure, of));
+import { IRootApi } from 'data/services';
+import { getFetchItemsFlow, getEditFlow } from '../utils';
 
-    return from(SavedApi.list())
-      .pipe(onSuccess, onError);
-  };
+export const fetchItemsFlow: Epic = getFetchItemsFlow(
+  actions.fetchItems,
+  ({ SavedApi }: IRootApi) => SavedApi.list(),
+);
 
-  return action$.pipe(filtered, switchMap(mapped));
-};
+export const saveItemFlow: Epic = getEditFlow(
+  actions.saveItem,
+  ({SavedApi}: IRootApi, item: records.Item) => SavedApi.saveItem(item),
+);
 
-export const saveItemFlow = getEditFlow(actions.saveItem, 'saveItem');
-
-export const deleteItemFlow = getEditFlow(actions.deleteItem, 'deleteItem');
-
-function getEditFlow(asyncAction: IAsyncAction, apiMethod: string): Epic {
-  return (action$, store, { SavedApi }) => {
-    const filtered = filter(isActionOf(asyncAction.request));
-    const mapped = ({ payload }: RootActions) => {
-      const item = store.value.items.get(payload);
-      const onSuccess = map(asyncAction.success);
-      const onError = catchError(pipe(asyncAction.failure, of));
-      const fetch = SavedApi[apiMethod](item);
-
-      return from(fetch.then(insertKey))
-        .pipe(onSuccess, onError);
-
-      function insertKey(updatedItem: records.Item): IStorageEntry {
-        return [ payload, updatedItem ];
-      }
-    };
-
-    return action$.pipe(filtered, switchMap(mapped));
-  };
-}
+export const deleteItemFlow: Epic = getEditFlow(
+  actions.deleteItem,
+  ({SavedApi}: IRootApi, item: records.Item) => SavedApi.deleteItem(item),
+);

@@ -13,6 +13,7 @@ it('render without crashing', () => {
   const store = storageFromItems(savedItems);
   const initialState = {
     items: store,
+    loading: 'random',
   };
   const storageItems = storageToItems(store);
   const wrapper: ShallowWrapper = getConnectedWrapper(Connected, { initialState });
@@ -20,7 +21,9 @@ it('render without crashing', () => {
     fetch: [actions.fetchItems.request()],
   });
 
-  const { items } = wrapper.props() as IFeedProps;
+  const { items, isLoading } = wrapper.props() as IFeedProps;
   expect(items)
     .toEqual(storageItems);
+  expect(isLoading)
+    .toBe(true);
 });

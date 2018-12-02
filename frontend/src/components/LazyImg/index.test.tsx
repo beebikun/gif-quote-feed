@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
-import LazyImg, { defaultParams, IProps } from './index';
+import LazyImg, { IProps } from './index';
 
 const props = {
   height: 100,
@@ -26,14 +26,12 @@ function getImgLoader(wrapper: ShallowWrapper): HTMLImageElement {
 }
 
 it('renders without crashing', () => {
-  expect(props)
-    .not.toEqual(defaultParams);
-
   const options = { lifecycleExperimental: false, disableLifecycleMethods: true };
   const wrapper = shallow(<LazyImg { ...props } />, options);
   const imgLoader = getImgLoader(wrapper);
 
-  expectImgMatch(defaultParams);
+  expectLoader(true);
+  expectImgMatch();
 
   expect(imgLoader.onload)
     .toBeUndefined();
@@ -45,12 +43,25 @@ it('renders without crashing', () => {
   expect(imgLoader.onload)
     .toBeUndefined();
 
+  expectLoader(false);
   expectImgMatch(props);
 
-  function expectImgMatch(expected: IProps): void {
+  function expectImgMatch(expected?: IProps): void {
     const Img = wrapper.update().find('img');
-    expect(Img.props())
-      .toMatchObject(expected);
+
+    if (expected) {
+      expect(Img.props())
+        .toMatchObject(expected);
+    } else {
+      expect(Img)
+        .toHaveLength(0);
+    }
+  }
+
+  function expectLoader(expected: boolean): void {
+    const Loader = wrapper.update().find('Loader');
+    expect(Loader)
+      .toHaveLength(expected ? 1 : 0);
   }
 });
 

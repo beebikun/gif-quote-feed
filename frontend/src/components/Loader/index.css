@@ -1,0 +1,63 @@
+/* src: https://loading.io/css/  */
+
+.lds-ripple-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+}
+/*########################*/
+.lds-ripple-container {
+  background-color: transparent;
+}
+.lds-ripple-container .lds-ripple::after,
+.lds-ripple-container .lds-ripple::before {
+  border: 4px solid #ec7140;
+}
+
+.lds-ripple-container--dark {
+  background-color: #444;
+}
+.lds-ripple-container--dark .lds-ripple::after,
+.lds-ripple-container--dark .lds-ripple::before {
+  border: 4px solid #fff;
+}
+/*########################*/
+.lds-ripple {
+  display: flex;
+  align-items: center;
+  justify-content: centre;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-ripple::after,
+.lds-ripple::before {
+  content: '';
+  position: absolute;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.lds-ripple::after {
+  animation-delay: -0.6s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 28px;
+    left: 28px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: -1px;
+    left: -1px;
+    width: 58px;
+    height: 58px;
+    opacity: 0;
+  }
+}

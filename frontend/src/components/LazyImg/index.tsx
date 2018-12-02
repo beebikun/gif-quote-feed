@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './index.css';
-import loader from './loader.gif';
+
+import Loader from 'components/Loader';
 
 export interface IProps {
   height: number;
@@ -8,17 +9,15 @@ export interface IProps {
   width: number;
 }
 
-export const defaultParams: IProps = {
-  height: 200,
-  src: process.env.NODE_ENV === 'test' ? 'default' : loader,
-  width: 200,
-};
+export interface IState {
+  isLoading: boolean;
+}
 
-export default class LazyImg extends React.Component<IProps, IProps> {
+export default class LazyImg extends React.Component<IProps, IState> {
   public img = new Image();
 
-  public state: IProps = {
-    ...defaultParams
+  public state: IState = {
+    isLoading: true,
   };
 
   public componentDidMount() {
@@ -36,12 +35,23 @@ export default class LazyImg extends React.Component<IProps, IProps> {
   }
 
   public render() {
-    return (
-      <img className='LazyImg'
-           width={ this.state.width } height={ this.state.height }
-           src={ this.state.src }
-           />
-    );
+    if (this.state.isLoading) {
+      const size = { width: this.props.width + 'px', height: this.props.height + 'px' };
+
+      return (
+        <div className='LazyImg' style={ size }>
+          <Loader dark={ true } />
+        </div>
+      );
+    } else {
+      return (
+        <img className='LazyImg'
+             width={ this.props.width } height={ this.props.height }
+             src={ this.props.src }
+             />
+      );
+    }
+
   }
 
   public clearImgOnload() {
@@ -50,17 +60,17 @@ export default class LazyImg extends React.Component<IProps, IProps> {
   }
 
   public loadImg() {
-    const { height, src, width } = this.props;
-    this.setState({ ...defaultParams, height: width, width });
+    this.setState({ isLoading: true });
 
     this.img.onload = () => {
       this.clearImgOnload();
-      this.setState({ height, src, width });
+      this.setState({ isLoading: false });
     };
     this.img.onerror = () => {
       this.clearImgOnload();
-      console.log('ERROR', src);
+      console.log('ERROR', this.props.src);
     };
-    this.img.src = src;
+    // start lazy loading
+    this.img.src = this.props.src;
   }
 }

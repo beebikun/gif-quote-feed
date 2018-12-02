@@ -9,6 +9,7 @@ import Feed from 'components/Feed';
 
 function mapStateToProps(state: RootState) {
   return {
+    isLoading: state.loading !== false,
     items: storageToItems(state.items),
   };
 }

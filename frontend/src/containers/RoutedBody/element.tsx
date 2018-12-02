@@ -1,20 +1,16 @@
 import * as React from 'react';
+import { Location } from 'history';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import { RootActions } from 'data/reducers';
-import AsyncFeed from 'containers/AsyncFeed';
-import { Location } from 'history';
+import RandomFeed from 'containers/RandomFeed';
+import SavedFeed from 'containers/SavedFeed';
 
 export interface IProps {
-  fetchRandom: () => RootActions;
-  fetchSaved: () => RootActions;
   location: Location;
 }
 
-export default function RoutedBody({ fetchRandom, fetchSaved }: IProps) {
-  const RandomFeed = () => <AsyncFeed fetch={ fetchRandom } />;
-  const SavedFeed = () => <AsyncFeed fetch={ fetchSaved } />;
 
+export default function RoutedBody(props: IProps) {
   return (
     <Switch>
       <Route exact={ true } path='/' component={ RandomFeed } />

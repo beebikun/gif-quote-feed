@@ -1,11 +1,11 @@
 /* tslint:disable:max-classes-per-file */
 import * as React from 'react';
-import { withRouter, Route, MemoryRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { mount, ReactWrapper } from 'enzyme';
-import { Provider } from 'react-redux';
 import { connect } from 'react-redux';
 import { RootState } from 'data/reducers';
-import store from 'data/storage';
+import Provider from 'provider';
+import { history } from 'data/storage';
 import App from 'components';
 
 export interface IAssertProps extends RouteComponentProps {
@@ -33,6 +33,8 @@ export function renderTestSequence({
   renderPromise.then(() => {
     wrapper = mount(<Test />);
   });
+
+  history.push(initialPath);
 
   class Assert extends React.Component<IAssertProps, {}>  {
     public componentDidMount() {
@@ -69,11 +71,7 @@ export function renderTestSequence({
   class Test extends React.Component {
     public render() {
       return (
-        <Provider store={ store }>
-          <MemoryRouter initialEntries={ [initialPath] } >
-             <Route component={ withRouter(ConnectedAssert) } />
-          </MemoryRouter>
-        </Provider>
+        <Provider debug={ false } app={ withRouter(ConnectedAssert) } />
       );
     }
   }

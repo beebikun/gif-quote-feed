@@ -6,7 +6,7 @@ import { renderTestSequence, IStepFunction, IStepFunctionProps } from './router'
 export default function expectApp(initialPath: string, isRandom: boolean,
                                   steps: IStepFunction[], count: number): Promise<void> {
   return new Promise(resolve => {
-    const renderSteps = [ expectCallFetch, expectLoadItems ].concat(steps.slice(1));
+    const renderSteps = [ expectCallFetch, expectLoadingChange, expectLoadItems ].concat(steps.slice(1));
     const firstStep = steps[0] || Function.prototype;
     const lastStep = renderSteps[renderSteps.length - 1];
     renderSteps[renderSteps.length - 1] = (props: IStepFunctionProps) => {
@@ -19,12 +19,6 @@ export default function expectApp(initialPath: string, isRandom: boolean,
       initialPath,
       steps: renderSteps,
     });
-
-    function expectReducerItems(size: number): void {
-      const items = store.getState().items;
-      expect(items.size)
-        .toEqual(size);
-    }
 
     function expectCallFetch({ wrapper }: IStepFunctionProps): void {
       const Header = wrapper.find('Header');
@@ -39,8 +33,14 @@ export default function expectApp(initialPath: string, isRandom: boolean,
       expectReducerItems(0);
     }
 
+    function expectLoadingChange(): void {
+      expectLoading(isRandom ? 'random' : 'saved');
+    }
+
     function expectLoadItems(props: IStepFunctionProps): void {
       const { wrapper } = props;
+
+      expectLoading(false);
 
       const Feed = wrapper.find('Feed');
       expect(Feed).toHaveLength(1);
@@ -82,4 +82,17 @@ export default function expectApp(initialPath: string, isRandom: boolean,
       firstStep(props);
     }
   });
+}
+
+
+function expectReducerItems(size: number): void {
+  const { items } = store.getState();
+  expect(items.size)
+    .toEqual(size);
+}
+
+function expectLoading(expected: boolean | string): void {
+  const { loading } = store.getState();
+  expect(loading)
+    .toEqual(expected);
 }

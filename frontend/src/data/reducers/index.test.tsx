@@ -12,6 +12,7 @@ it('set defaults', () => {
   expect(nextState)
     .toEqual({
       items: Immutable.OrderedMap(),
+      loading: false,
       router: {
         action: history.action,
         location: history.location,

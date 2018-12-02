@@ -1,34 +1,13 @@
 import 'purecss';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { Route } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router';
-
-import store, { history } from './data/storage';
-import App from './components';
-import registerServiceWorker from './registerServiceWorker';
-
-import { enableLogger } from './data/reducers';
-enableLogger();
 
 
-const RoutedApp = () => (
-  <ConnectedRouter history={ history }>
-    <Route path='/' component={ App } />
-  </ConnectedRouter>
-);
-
-const Root = () => (
-  <Provider store={ store }>
-    <RoutedApp />
-  </Provider>
-);
-
-
+import Provider from './provider';
 ReactDOM.render(
-  <Root />,
+  <Provider debug={ false } />,
   document.getElementById('root') as HTMLElement
 );
 
+import registerServiceWorker from './registerServiceWorker';
 registerServiceWorker();

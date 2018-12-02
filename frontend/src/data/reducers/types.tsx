@@ -11,9 +11,11 @@ export interface IAsyncAction<A = (payload: any) => IAction> {
 }
 import { RouterState } from 'connected-react-router';
 import { IStorage } from './utils';
+import { LoadingReducer } from './loading';
 
 interface IState {
   items: IStorage;
+  loading: LoadingReducer;
   router: RouterState;
   zlogger: boolean;
 }

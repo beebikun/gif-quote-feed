@@ -2,7 +2,7 @@ import { RootActions } from '../types';
 
 import actions from './actions';
 
-export default function(loggerEnable=false, action: RootActions) {
+export default function (loggerEnable = false, action: RootActions) {
   if (loggerEnable) {
     console.log(action);
   }

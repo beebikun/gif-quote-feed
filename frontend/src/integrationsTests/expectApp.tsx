@@ -3,7 +3,8 @@ import { FakeID } from 'utils';
 import store from 'data/storage';
 import { renderTestSequence, IStepFunction, IStepFunctionProps } from './router';
 
-export default function expectApp(initialPath: string, isRandom: boolean, steps: IStepFunction[], count: number): Promise<void> {
+export default function expectApp(initialPath: string, isRandom: boolean,
+                                  steps: IStepFunction[], count: number): Promise<void> {
   return new Promise(resolve => {
     const renderSteps = [ expectCallFetch, expectLoadItems ].concat(steps.slice(1));
     const firstStep = steps[0] || Function.prototype;

@@ -1,7 +1,9 @@
+import { ReactWrapper } from 'enzyme';
 import { IStorageEntry } from 'data/reducers/utils';
 import { COUNT as RANDOM_ITEMS_COUNT } from 'data/services/random/Andruxnet';
 import { FakeID } from 'utils';
 import store from 'data/storage';
+import { IStepFunctionProps } from './router';
 import expectApp from './expectApp';
 import expectToggleSave from './expectToggleSave';
 
@@ -43,7 +45,7 @@ it('Open random', (done) => {
   function saveItem({ wrapper }: IStepFunctionProps): void {
     const SaveButton = wrapper
       .find('ButtonAdd')
-      .filterWhere(n => n.prop('isSaved') === false)
+      .filterWhere((n: ReactWrapper) => n.prop('isSaved') === false)
       .at(0);
     SaveButton.simulate('click');
   }

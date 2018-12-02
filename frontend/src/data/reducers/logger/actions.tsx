@@ -3,6 +3,6 @@ const DISABLE_LOGGER = 'LOGGER/DISABLE';
 
 
 export default {
-  ENABLE: { type: ENABLE_LOGGER },
   DISABLE: { type: DISABLE_LOGGER },
+  ENABLE: { type: ENABLE_LOGGER },
 };
